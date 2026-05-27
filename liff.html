@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>MoneyMate</title>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(180deg, #f5f0e8 0%, #eee8d8 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: #3d6b35;
+    padding: 14px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .header-icon {
+    width: 48px; height: 48px;
+    background: #f5c842;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .header-text { display: flex; flex-direction: column; }
+  .header-sub { font-size: 10px; color: #a8c9a0; letter-spacing: 1.5px; text-transform: uppercase; }
+  .header-title { font-size: 20px; font-weight: 700; color: #fff; }
+
+  /* ── Page title ── */
+  .page-title {
+    padding: 20px 20px 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .page-icon {
+    width: 44px; height: 44px;
+    background: #d6ead6;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .page-title-text h2 { font-size: 20px; font-weight: 700; color: #3d2b00; }
+  .page-title-text p { font-size: 13px; color: #7a6040; margin-top: 2px; }
+
+  /* ── Form Card ── */
+  .form-card {
+    background: #fff;
+    margin: 12px 16px;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3d2b00;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .field-label .icon { font-size: 15px; }
+
+  .input-wrap { position: relative; }
+  .input-wrap input {
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 14px;
+    background: #f5f0e8;
+    font-size: 16px;
+    color: #3d2b00;
+    outline: none;
+    transition: background 0.2s;
+    -webkit-appearance: none;
+  }
+  .input-wrap input::placeholder { color: #b0a080; }
+  .input-wrap input:focus { background: #ede8d8; }
+  .input-wrap input.error { background: #fdecea; outline: 2px solid #e53935; }
+
+  .input-wrap .unit {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #9a8060;
+    font-weight: 500;
+    pointer-events: none;
+  }
+  .input-wrap input.has-unit { padding-right: 44px; }
+
+  /* spinner for number */
+  .spin-wrap { position: relative; }
+  .spin-wrap input { padding-right: 36px; }
+  .spin-btns {
+    position: absolute;
+    right: 8px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .spin-btn {
+    width: 20px; height: 16px;
+    background: #e0d8c8;
+    border: none; border-radius: 4px;
+    font-size: 10px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #5a4a30;
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .err-msg { font-size: 11px; color: #e53935; margin-top: 4px; display: none; padding-left: 4px; }
+
+  /* ── Calc Button ── */
+  .btn-calc {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 4px 16px 12px;
+    padding: 16px;
+    background: linear-gradient(135deg, #5a8f4e, #3d6b35);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 14px rgba(61,107,53,0.3);
+  }
+  .btn-calc:active { opacity: 0.88; transform: scale(0.99); }
+
+  /* ── Bottom Nav ── */
+  .bottom-nav {
+    margin-top: auto;
+    background: #fff;
+    border-top: 1px solid #e8e0d0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 8px 0 20px;
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 6px 8px;
+    font-size: 11px; color: #9a8060;
+    cursor: pointer;
+  }
+  .nav-item .nav-icon { font-size: 22px; }
+  .nav-item.active {
+    color: #3d6b35;
+  }
+  .nav-item.active .nav-pill {
+    background: #d6ead6;
+    border-radius: 14px;
+    padding: 6px 18px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    width: 100%;
+  }
+
+  /* ── Modal Overlay ── */
+  .overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none; align-items: flex-end; justify-content: center;
+    z-index: 100;
+  }
+  .overlay.show { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-width: 480px;
+    padding-bottom: 32px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: #ddd; border-radius: 2px;
+    margin: 12px auto 0;
+  }
+  .modal-header {
+    padding: 16px 20px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid #f0ebe0;
+  }
+  .modal-header h2 { font-size: 16px; font-weight: 700; color: #3d2b00; }
+  .modal-close {
+    width: 28px; height: 28px;
+    background: #f0ebe0; border: none; border-radius: 50%;
+    font-size: 14px; cursor: pointer; color: #5a4a30;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-body { padding: 16px 20px; }
+
+  .res-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #f0ebe0;
+  }
+  .res-row:last-child { border-bottom: none; }
+  .res-label { font-size: 13px; color: #7a6040; }
+  .res-value { font-size: 15px; font-weight: 600; color: #3d2b00; }
+  .res-value.big { font-size: 22px; color: #3d6b35; }
+  .res-value.blue { color: #1565C0; }
+
+  .res-ticker-badge {
+    background: #d6ead6; color: #3d6b35;
+    padding: 3px 12px; border-radius: 99px;
+    font-size: 14px; font-weight: 700;
+  }
+
+  .btn-send {
+    display: block; width: calc(100% - 40px);
+    margin: 16px 20px 0;
+    padding: 14px;
+    background: linear-gradient(135deg, #5a8f4e, #3d6b35);
+    color: #fff; border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(61,107,53,0.25);
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-icon">✦</div>
+  <div class="header-text">
+    <span class="header-sub">Investor Toolkit</span>
+    <span class="header-title">MoneyMate</span>
+  </div>
+</div>
+
+<!-- Page Title -->
+<div class="page-title">
+  <div class="page-icon">🧮</div>
+  <div class="page-title-text">
+    <h2>คำนวณราคาเฉลี่ยหุ้น</h2>
+    <p>กรอกข้อมูลหุ้นเดิมและที่ซื้อเพิ่ม</p>
+  </div>
+</div>
+
+<!-- Form Card -->
+<div class="form-card">
+
+  <div class="field">
+    <div class="field-label"><span class="icon">↗</span> ชื่อหุ้น (Ticker)</div>
+    <div class="input-wrap">
+      <input type="text" id="ticker" placeholder="เช่น PTT" autocomplete="off">
+    </div>
+    <div class="err-msg" id="err-ticker">กรุณากรอกชื่อหุ้น</div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <div class="field-label"><span class="icon">☰</span> จำนวนหุ้นเดิม</div>
+      <div class="input-wrap spin-wrap">
+        <input type="number" id="old-qty" placeholder="0" min="0">
+        <div class="spin-btns">
+          <button class="spin-btn" onclick="spin('old-qty',1)">▲</button>
+          <button class="spin-btn" onclick="spin('old-qty',-1)">▼</button>
+        </div>
+      </div>
+      <div class="err-msg" id="err-old-qty">กรุณากรอกจำนวน</div>
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="icon">$</span> ราคาเฉลี่ยเดิม</div>
+      <div class="input-wrap">
+        <input type="number" id="old-cost" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+        <span class="unit">บาท</span>
+      </div>
+      <div class="err-msg" id="err-old-cost">กรุณากรอกราคา</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field">
+      <div class="field-label"><span class="icon">#</span> จำนวนซื้อเพิ่ม</div>
+      <div class="input-wrap">
+        <input type="number" id="new-qty" placeholder="0" min="0">
+      </div>
+      <div class="err-msg" id="err-new-qty">กรุณากรอกจำนวน</div>
+    </div>
+    <div class="field">
+      <div class="field-label"><span class="icon">$</span> ราคาที่ซื้อเพิ่ม</div>
+      <div class="input-wrap">
+        <input type="number" id="new-cost" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+        <span class="unit">บาท</span>
+      </div>
+      <div class="err-msg" id="err-new-cost">กรุณากรอกราคา</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Calc Button -->
+<button class="btn-calc" onclick="calculate()">คำนวณ</button>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <span class="nav-icon">🏠</span>
+    <span>หน้าแรก</span>
+  </div>
+  <div class="nav-item active">
+    <div class="nav-pill">
+      <span class="nav-icon">🧮</span>
+      <span>คำนวณราคาเฉลี่ยหุ้น</span>
+    </div>
+  </div>
+  <div class="nav-item">
+    <span class="nav-icon">💰</span>
+    <span>คำนวณปันผล</span>
+  </div>
+</div>
+
+<!-- Modal Popup -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2>📈 ผลการคำนวณ</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="res-row">
+        <span class="res-label">ชื่อหุ้น</span>
+        <span class="res-ticker-badge" id="res-ticker"></span>
+      </div>
+      <div class="res-row">
+        <span class="res-label">จำนวนหุ้นรวม</span>
+        <span class="res-value" id="res-total-qty"></span>
+      </div>
+      <div class="res-row">
+        <span class="res-label">ราคาเฉลี่ยใหม่</span>
+        <span class="res-value big" id="res-avg"></span>
+      </div>
+      <div class="res-row">
+        <span class="res-label">เงินที่ต้องใช้ซื้อเพิ่ม</span>
+        <span class="res-value blue" id="res-money"></span>
+      </div>
+    </div>
+    <button class="btn-send" onclick="sendToLine()">ส่งผลลัพธ์ไปที่แชท</button>
+  </div>
+</div>
+
+<script>
+let calcResult = null
+
+function spin(id, delta) {
+  const el = document.getElementById(id)
+  el.value = Math.max(0, (+el.value || 0) + delta)
+}
+
+function fmtInput(el) {
+  if (el.value !== '' && !isNaN(el.value)) {
+    el.value = parseFloat(el.value).toFixed(2)
+  }
+}
+
+function validate() {
+  let ok = true
+  const fields = [
+    { id: 'ticker', err: 'err-ticker', check: v => v.trim() !== '' },
+    { id: 'old-qty', err: 'err-old-qty', check: v => v !== '' && +v > 0 },
+    { id: 'old-cost', err: 'err-old-cost', check: v => v !== '' && +v > 0 },
+    { id: 'new-qty', err: 'err-new-qty', check: v => v !== '' && +v > 0 },
+    { id: 'new-cost', err: 'err-new-cost', check: v => v !== '' && +v > 0 },
+  ]
+  fields.forEach(f => {
+    const el = document.getElementById(f.id)
+    const err = document.getElementById(f.err)
+    if (!f.check(el.value)) {
+      el.classList.add('error'); err.style.display = 'block'; ok = false
+    } else {
+      el.classList.remove('error'); err.style.display = 'none'
+    }
+  })
+  return ok
+}
+
+function fmt(n) { return n.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }
+function fmtQty(n) { return n.toLocaleString('th-TH') }
+
+function calculate() {
+  if (!validate()) return
+  const ticker = document.getElementById('ticker').value.trim().toUpperCase()
+  const oldQty = +document.getElementById('old-qty').value
+  const oldCost = +document.getElementById('old-cost').value
+  const newQty = +document.getElementById('new-qty').value
+  const newCost = +document.getElementById('new-cost').value
+  const totalQty = oldQty + newQty
+  const totalValue = (oldQty * oldCost) + (newQty * newCost)
+  const avgCost = totalValue / totalQty
+  const moneyNeeded = newQty * newCost
+  calcResult = { ticker, oldQty, oldCost, newQty, newCost, totalQty, avgCost, moneyNeeded }
+  document.getElementById('res-ticker').textContent = ticker
+  document.getElementById('res-total-qty').textContent = fmtQty(totalQty) + ' หุ้น'
+  document.getElementById('res-avg').textContent = fmt(avgCost) + ' บาท'
+  document.getElementById('res-money').textContent = fmt(moneyNeeded) + ' บาท'
+  document.getElementById('overlay').classList.add('show')
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('overlay')) {
+    document.getElementById('overlay').classList.remove('show')
+  }
+}
+
+async function sendToLine() {
+  if (!calcResult) return
+  const msg =
+`📊 ${calcResult.ticker} — ราคาเฉลี่ยใหม่
+─────────────────
+หุ้นเดิม: ${fmtQty(calcResult.oldQty)} หุ้น @ ${fmt(calcResult.oldCost)} บาท
+ซื้อเพิ่ม: ${fmtQty(calcResult.newQty)} หุ้น @ ${fmt(calcResult.newCost)} บาท
+─────────────────
+จำนวนรวม: ${fmtQty(calcResult.totalQty)} หุ้น
+ราคาเฉลี่ยใหม่: ${fmt(calcResult.avgCost)} บาท
+เงินที่ใช้ซื้อเพิ่ม: ${fmt(calcResult.moneyNeeded)} บาท`
+  try {
+    await liff.init({ liffId: 'YOUR_LIFF_ID' })
+    await liff.sendMessages([{ type: 'text', text: msg }])
+    liff.closeWindow()
+  } catch (e) {
+    alert('เกิดข้อผิดพลาด: ' + e.message)
+  }
+}
+
+document.querySelectorAll('input').forEach(el => {
+  el.addEventListener('input', () => {
+    el.classList.remove('error')
+    const err = document.getElementById('err-' + el.id)
+    if (err) err.style.display = 'none'
+  })
+})
+</script>
+</body>
+</html>
