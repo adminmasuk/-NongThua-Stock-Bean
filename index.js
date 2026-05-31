@@ -57,5 +57,11 @@ Dividend Yield: ${divYield}%
   })
 }
 
+const path = require('path')
+app.use(express.static(__dirname))
+app.get('/liff', (req, res) => {
+  res.sendFile(path.join(__dirname, 'liff.html'))
+})
+
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`Bot running on port ${PORT}`))
