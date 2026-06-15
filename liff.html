@@ -490,6 +490,15 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 const LIFF_ID = '2010243171-8Hhy0bHv'
 let avgData = null, divData = null
 
+// Read URL parameter and go to correct page on load
+function initPage() {
+  const params = new URLSearchParams(window.location.search)
+  const page = params.get('page')
+  if (page === 'avg') goPage('avg')
+  else if (page === 'div') goPage('div')
+  else goPage('home')
+}
+
 // Navigation
 function goPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
@@ -695,6 +704,9 @@ async function shareResult(type) {
     alert('เกิดข้อผิดพลาด: ' + e.message)
   }
 }
+
+// Init page from URL param
+initPage()
 
 // Clear errors on input
 document.querySelectorAll('input').forEach(el => {
