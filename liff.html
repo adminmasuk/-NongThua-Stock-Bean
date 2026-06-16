@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8"/>
@@ -492,8 +492,17 @@ let avgData = null, divData = null
 
 // Read URL parameter and go to correct page on load
 function initPage() {
-  const params = new URLSearchParams(window.location.search)
-  const page = params.get('page')
+  let params = new URLSearchParams(window.location.search)
+  let page = params.get('page')
+  // LINE LIFF wraps extra query params inside liff.state, e.g. ?liff.state=%3Fpage%3Davg
+  if (!page) {
+    const liffState = params.get('liff.state')
+    if (liffState) {
+      const decoded = decodeURIComponent(liffState)
+      const stateParams = new URLSearchParams(decoded.startsWith('?') ? decoded.slice(1) : decoded)
+      page = stateParams.get('page')
+    }
+  }
   if (page === 'avg') goPage('avg')
   else if (page === 'div') goPage('div')
   else goPage('home')
