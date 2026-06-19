@@ -103,6 +103,9 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 .input-wrap input.error{background:#fdecea;outline:2px solid #e53935;}
 .input-wrap input::placeholder{color:#CCCCCC;}
 .input-wrap input.has-unit{padding-right:52px;}
+.input-wrap textarea{width:100%;min-height:80px;border:1.5px solid #CCCCCC;outline:none;border-radius:20px;padding:16px 24px;background:#FCFCFC;font-size:16px;font-weight:500;color:#3a2800;font-family:'Prompt',sans-serif;transition:border 0.2s;resize:none;}
+.input-wrap textarea:focus{background:#FCFCFC;border:2px solid #1a5c28;outline:none;}
+.input-wrap textarea::placeholder{color:#CCCCCC;}
 .unit{position:absolute;right:22px;top:50%;transform:translateY(-50%);font-size:14px;color:#9a8060;font-weight:600;pointer-events:none;}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .err-msg{font-size:11px;color:#e53935;margin-top:4px;padding-left:12px;display:none;}
@@ -277,7 +280,7 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
     </div>
     <div class="row">
       <div class="field">
-        <div class="field-label">จำนวนซื้อเพิ่ม</div>
+        <div class="field-label">จำนวนหุ้นที่ซื้อเพิ่ม</div>
         <div class="input-wrap"><input type="number" id="avg-newQty" placeholder="100" min="100" step="100"></div>
         <div class="err-msg" id="err-avg-newQty">ขั้นต่ำ 100 หุ้น</div>
       </div>
@@ -289,6 +292,10 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
         </div>
         <div class="err-msg" id="err-avg-newPrice">กรุณากรอก</div>
       </div>
+    </div>
+    <div class="field">
+      <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+      <div class="input-wrap"><textarea id="avg-note" placeholder="บันทึกเพิ่มเติม เช่น เหตุผลที่ซื้อเพิ่ม"></textarea></div>
     </div>
   </div>
   <button class="calc-btn" onclick="calcAvg()">คำนวณราคาเฉลี่ย</button>
@@ -331,6 +338,10 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
         <input type="number" id="div-tax" placeholder="10" value="10" min="0" max="100" class="has-unit">
         <span class="unit">%</span>
       </div>
+    </div>
+    <div class="field">
+      <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+      <div class="input-wrap"><textarea id="div-note" placeholder="บันทึกเพิ่มเติม"></textarea></div>
     </div>
   </div>
   <button class="calc-btn" onclick="calcDiv()">คำนวณเงินปันผล</button>
@@ -490,6 +501,12 @@ const LIFF_ID = '2010243171-8Hhy0bHv'
 let avgData = null, divData = null
 let liffReady = false
 
+function thaiDateNow() {
+  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
+  const d = new Date()
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`
+}
+
 // Initialize LIFF ONCE when the page loads (not on every share click)
 const liffInitPromise = liff.init({ liffId: LIFF_ID })
   .then(() => { liffReady = true })
@@ -612,7 +629,8 @@ function calcAvg() {
   const totalCost = (oldQty * oldPrice) + (newQty * newPrice)
   const avgPrice = totalCost / totalQty
   const moneyNeeded = newQty * newPrice
-  avgData = { ticker, totalQty, avgPrice, moneyNeeded, totalCost }
+  const note = document.getElementById('avg-note').value.trim()
+  avgData = { ticker, totalQty, avgPrice, moneyNeeded, totalCost, note, newQty, oldPrice }
   document.getElementById('res-avg-ticker').textContent = ticker
   document.getElementById('res-avg-qty').textContent = fmtQty(totalQty) + ' หุ้น'
   document.getElementById('res-avg-price').textContent = fmt(avgPrice) + ' บาท'
@@ -665,7 +683,8 @@ function calcDiv() {
   const gross = qty * dps
   const tax = gross * (taxRate / 100)
   const net = gross - tax
-  divData = { ticker, qty, dps, taxRate, gross, tax, net }
+  const note = document.getElementById('div-note').value.trim()
+  divData = { ticker, qty, dps, taxRate, gross, tax, net, note }
   document.getElementById('res-div-ticker').textContent = ticker
   document.getElementById('res-div-gross').textContent = fmt(gross) + ' บาท'
   document.getElementById('res-div-taxrate').textContent = taxRate + '%'
@@ -693,12 +712,18 @@ async function saveImg(modalId) {
 async function shareResult(type) {
   let msg = ''
   if (type === 'avg' && avgData) {
-    msg = `📊 ${avgData.ticker} — ราคาเฉลี่ยใหม่
+    msg = `📊 ผลการคำนวณราคาหุ้นใหม่
+วันที่ : ${thaiDateNow()}
 ─────────────────
-จำนวนรวม: ${fmtQty(avgData.totalQty)} หุ้น
+ชื่อหุ้น : ${avgData.ticker}
 ราคาเฉลี่ยใหม่: ${fmt(avgData.avgPrice)} บาท
-เงินที่ใช้ซื้อเพิ่ม: ${fmt(avgData.moneyNeeded)} บาท
-ต้นทุนรวม: ${fmt(avgData.totalCost)} บาท
+ราคาเฉลี่ยเดิม : ${fmt(avgData.oldPrice)} บาท
+
+จำนวนหุ้นที่ต้องซื้อเพิ่ม: ${fmtQty(avgData.newQty)} หุ้น
+จำนวนหุ้นทั้งหมด : ${fmtQty(avgData.totalQty)} หุ้น
+
+จำนวนเงินที่ใช้ซื้อเพิ่ม: ${fmt(avgData.moneyNeeded)} บาท
+หมายเหตุ : ${avgData.note ? avgData.note : '-'}
 ─────────────────
 คำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
   } else if (type === 'divstock' && window._dsData) {
@@ -712,11 +737,18 @@ Dividend Yield: ${d.divYield.toFixed(2)}%
 ─────────────────
 คำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
   } else if (type === 'div' && divData) {
-    msg = `💰 ${divData.ticker} — ผลปันผล
+    msg = `💰 ผลการคำนวณเงินปันผล
+วันที่ : ${thaiDateNow()}
 ─────────────────
+ชื่อหุ้น : ${divData.ticker}
+จำนวนหุ้น : ${fmtQty(divData.qty)} หุ้น
+ปันผล/หุ้น : ${fmt(divData.dps)} บาท
+
 ปันผลก่อนหักภาษี: ${fmt(divData.gross)} บาท
 ภาษีหัก ${divData.taxRate}%: -${fmt(divData.tax)} บาท
 ปันผลสุทธิ: ${fmt(divData.net)} บาท
+
+หมายเหตุ : ${divData.note ? divData.note : '-'}
 ─────────────────
 คำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
   }
