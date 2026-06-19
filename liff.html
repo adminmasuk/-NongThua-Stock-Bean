@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -489,6 +488,15 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 <script>
 const LIFF_ID = '2010243171-8Hhy0bHv'
 let avgData = null, divData = null
+let liffReady = false
+
+// Initialize LIFF ONCE when the page loads (not on every share click)
+const liffInitPromise = liff.init({ liffId: LIFF_ID })
+  .then(() => { liffReady = true })
+  .catch(err => {
+    console.error('LIFF init failed:', err)
+    liffReady = false
+  })
 
 // Read URL parameter and go to correct page on load
 function initPage() {
@@ -695,7 +703,14 @@ async function shareResult(type) {
 คำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
   } else if (type === 'divstock' && window._dsData) {
     const d = window._dsData
-    msg = `📊 \${d.ticker} — ปันผลหุ้น\n─────────────────\nDividend Yield: \${d.divYield.toFixed(2)}%\nปันผลก่อนหักภาษี: \${fmt(d.gross)} บาท\nภาษีหัก \${d.taxRate}%: -\${fmt(d.tax)} บาท\nปันผลสุทธิ/ปี: \${fmt(d.net)} บาท\n─────────────────\nคำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
+    msg = `📊 ${d.ticker} — ปันผลหุ้น
+─────────────────
+Dividend Yield: ${d.divYield.toFixed(2)}%
+ปันผลก่อนหักภาษี: ${fmt(d.gross)} บาท
+ภาษีหัก ${d.taxRate}%: -${fmt(d.tax)} บาท
+ปันผลสุทธิ/ปี: ${fmt(d.net)} บาท
+─────────────────
+คำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
   } else if (type === 'div' && divData) {
     msg = `💰 ${divData.ticker} — ผลปันผล
 ─────────────────
@@ -706,11 +721,19 @@ async function shareResult(type) {
 คำนวณด้วย น้องถั่ว ถั่วหุ้น @nongthuastockbean`
   }
   try {
-    await liff.init({ liffId: LIFF_ID })
+    await liffInitPromise
+    if (!liffReady) {
+      alert('เชื่อมต่อ LINE ไม่สำเร็จ กรุณาปิดหน้านี้แล้วเปิดใหม่อีกครั้ง')
+      return
+    }
+    if (!liff.isInClient()) {
+      alert('ฟีเจอร์ส่งผลเข้าแชทใช้ได้เฉพาะเมื่อเปิดผ่านแอป LINE เท่านั้น')
+      return
+    }
     await liff.sendMessages([{ type: 'text', text: msg }])
     liff.closeWindow()
   } catch(e) {
-    alert('เกิดข้อผิดพลาด: ' + e.message)
+    alert('ส่งข้อความไม่สำเร็จ: ' + (e.message || 'กรุณาลองใหม่อีกครั้ง'))
   }
 }
 
