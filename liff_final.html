@@ -32,7 +32,7 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 .menu-item i{font-size:20px;} .menu-svg-icon{width:20px;height:20px;}
 
 /* ── Pages ── */
-.page{display:none;padding-bottom:80px;width:100%;min-height:0;height:0;overflow:hidden;}
+.page{display:none;padding-bottom:24px;width:100%;min-height:0;height:0;overflow:hidden;}
 .page.active{display:block;background:#e3ede8;width:100%;height:auto;overflow:visible;min-height:calc(100vh - 68px);}
 
 /* ── Home Page ── */
@@ -87,14 +87,13 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 /* ── Form Pages ── */
 .page-title{padding:20px 20px 12px;display:flex;align-items:center;gap:14px;}
 .page-title-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2d7a3a,#6ab04c);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
-.page-title-text h2{font-size:18px;font-weight:700;color:#3a2800;}
+.page-title-text h2{font-size:22px;font-weight:700;color:#3a2800;}
 .page-title-text p{font-size:13px;color:#9a8060;margin-top:2px;}
 
 .form-card{background:#fff;margin:0 16px 16px;border-radius:24px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,0.06);}
-#page-avg .form-card,#page-div .form-card{padding:16px;}
 .form-section-label{font-size:12px;color:#9a8060;font-weight:600;margin-bottom:14px;letter-spacing:0.5px;}
 
-.field{margin-bottom:12px;}
+.field{margin-bottom:18px;}
 .field:last-child{margin-bottom:0;}
 .field-label{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#5c3b24;margin-bottom:8px;}
 .field-label i{font-size:16px;color:#8c6040;}
@@ -104,7 +103,6 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 .input-wrap input.error{background:#fdecea;outline:2px solid #e53935;}
 .input-wrap input::placeholder{color:#CCCCCC;}
 .input-wrap input.has-unit{padding-right:52px;}
-.input-wrap input[type="date"]{-webkit-appearance:none;appearance:none;width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
 .input-wrap textarea{width:100%;min-height:80px;border:1.5px solid #CCCCCC;outline:none;border-radius:20px;padding:16px 24px;background:#FCFCFC;font-size:16px;font-weight:500;color:#3a2800;font-family:'Prompt',sans-serif;transition:border 0.2s;resize:none;}
 .input-wrap textarea:focus{background:#FCFCFC;border:2px solid #1a5c28;outline:none;}
 .input-wrap textarea::placeholder{color:#CCCCCC;}
@@ -112,58 +110,61 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .err-msg{font-size:11px;color:#e53935;margin-top:4px;padding-left:12px;display:none;}
 
-.calc-btn{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:calc(100% - 32px);max-width:448px;margin:0;padding:13px;background:linear-gradient(90deg,#3d8a3d,#6ab04c);color:#fff;border:none;border-radius:999px;font-size:15px;font-weight:700;font-family:'Prompt',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(61,138,61,0.3);z-index:40;}
-.calc-btn:active{transform:translateX(-50%) scale(0.98);}
+.calc-btn{display:block;width:calc(100% - 32px);margin:0 16px 16px;padding:18px;background:linear-gradient(90deg,#3d8a3d,#6ab04c);color:#fff;border:none;border-radius:999px;font-size:18px;font-weight:700;font-family:'Prompt',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(61,138,61,0.3);}
+.calc-btn:active{transform:scale(0.98);}
 
 
 
-/* ── Modal (Modern Gradient Style) ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(20,17,10,0.62);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;}
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;}
 .modal-overlay.show{display:flex;}
-.modal{width:92%;max-width:400px;max-height:88vh;overflow-y:auto;background:transparent;animation:fadeInModal 0.25s ease;display:flex;flex-direction:column;align-items:center;scrollbar-width:none;}
-.modal::-webkit-scrollbar{display:none;}
-@keyframes fadeInModal{from{opacity:0;transform:translateY(18px) scale(0.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+.modal{width:90%;max-width:430px;background:#f8f4ee;border-radius:20px;overflow:hidden;animation:fadeInModal 0.22s ease;max-height:88vh;overflow-y:auto;}
+@keyframes fadeInModal{from{opacity:0;transform:scale(0.93);}to{opacity:1;transform:scale(1);}}
+.modal-header{background:linear-gradient(90deg,#2d7a3a,#5a9e3a);padding:14px 18px;display:flex;align-items:center;gap:12px;position:relative;}
+.modal-logo{width:34px;height:34px;background:#f5c842;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.modal-header-text small{color:#c8f0c0;font-size:10px;display:block;}
+.modal-header-text strong{color:#fff;font-size:15px;font-weight:700;}
+.modal-close{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:30px;height:30px;background:rgba(255,255,255,0.2);border:none;border-radius:50%;color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
-.gcard{width:100%;flex-shrink:0;border-radius:28px;overflow:hidden;background:#fff;box-shadow:0 16px 40px rgba(0,0,0,0.3);}
+.modal-cards{padding:12px 14px;display:flex;flex-direction:column;gap:9px;}
+.cs{border-radius:14px;padding:11px 13px;}
+.cs-info{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:1px solid #c8e6c9;}
+.cs-price{background:#fff;border:1px solid #e8e0d0;}
+.cs-qty{background:#fff;border:1px solid #e8e0d0;}
+.cs-money{background:linear-gradient(135deg,#fff8e1,#fffde7);border:1px solid #ffe082;}
+.cs-div{background:#fff;border:1px solid #e8e0d0;}
+.cs-note{background:#f9f9f9;border:1px dashed #d0c8b8;}
+.cs-footer{background:linear-gradient(135deg,#f0f7e6,#e8f5e9);border:1px solid #c8e6c9;text-align:center;padding:8px 12px;}
+.cs-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
+.cs-row+.cs-row{border-top:1px solid rgba(0,0,0,0.06);margin-top:5px;padding-top:6px;}
+.cs-label{font-size:12px;color:#7a6040;font-weight:500;}
+.cs-val{font-size:13px;font-weight:700;color:#3a2800;text-align:right;}
+.cs-val.green{color:#2d7a3a;}
+.cs-val.orange{color:#e07800;}
+.cs-val.red{color:#d43434;}
+.cs-val.big{font-size:17px;}
+.cs-title{font-size:10px;font-weight:700;color:#9a8060;letter-spacing:0.5px;margin-bottom:7px;text-transform:uppercase;}
+.cs-footer-txt{font-size:11px;color:#5a7a40;font-weight:600;}
 
-.g-hero{position:relative;padding:22px 20px 56px;background:linear-gradient(135deg,#2d7a3a 0%,#4d9a44 45%,#8bc34a 100%);overflow:hidden;color:#fff;}
-.g-blob{position:absolute;border-radius:50%;background:rgba(255,255,255,0.14);pointer-events:none;}
-.g-blob.b1{width:160px;height:160px;top:-70px;right:-50px;}
-.g-blob.b2{width:110px;height:110px;bottom:-60px;left:-30px;background:rgba(245,200,66,0.18);}
-.g-hero-top{display:flex;align-items:center;justify-content:flex-end;position:relative;z-index:2;}
-.g-hero-icon{width:40px;height:40px;background:rgba(255,255,255,0.22);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;overflow:hidden;}
-.g-hero-icon img{width:100%;height:100%;object-fit:contain;display:block;}
-.g-close{width:30px;height:30px;background:rgba(255,255,255,0.2);border:none;border-radius:50%;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.g-hero-label{position:relative;z-index:2;font-size:12px;letter-spacing:0.5px;color:rgba(255,255,255,0.85);margin-top:18px;}
-.g-hero-value{position:relative;z-index:2;font-size:32px;font-weight:800;margin-top:4px;line-height:1.2;word-break:break-word;}
-.g-hero-meta{position:relative;z-index:2;display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
-.g-chip{background:rgba(255,255,255,0.22);padding:4px 12px;border-radius:99px;font-size:12px;font-weight:700;}
-.g-hero-date{font-size:11px;color:rgba(255,255,255,0.75);}
-
-.g-body{position:relative;margin-top:-38px;z-index:3;background:#fff;border-radius:24px 24px 0 0;padding:20px 18px 6px;}
-.g-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.g-tile{background:#f7f5ef;border-radius:16px;padding:12px 14px;}
-.g-tile .g-t-label{font-size:11px;color:#9a8060;font-weight:600;margin-bottom:4px;}
-.g-tile .g-t-val{font-size:14px;font-weight:700;color:#3a2800;}
-.g-tile .g-t-val.orange{color:#c96a00;}
-.g-tile .g-t-val.red{color:#c62828;}
-.g-tile .g-t-val.green{color:#1e7a2e;}
-.g-tile.full{grid-column:1 / -1;}
-.g-tile.highlight{background:linear-gradient(135deg,#eef7e6,#e3f3d8);border:1px solid #c8e6c9;}
-.g-tile.highlight .g-t-val{font-size:18px;color:#1e5c28;}
-
-.g-note{font-size:12px;color:#9a8060;font-style:italic;padding:12px 4px 4px;border-top:1px dashed #e6ddc8;margin-top:12px;}
-.g-footer{text-align:center;font-size:11px;color:#b0a48c;padding:14px 4px 18px;}
-.g-footer strong{color:#5a7a40;}
-
-.modal-actions{width:100%;padding:18px 6px 4px;}
-.btn-save{padding:14px;background:linear-gradient(90deg,#2d7a3a,#6ab04c);color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:700;font-family:'Prompt',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;box-shadow:0 6px 18px rgba(45,122,58,0.35);}
+.modal-actions{padding:0 14px 18px;display:grid;grid-template-columns:1fr;gap:10px;}
+.btn-save{padding:14px;background:#2d7a3a;color:#fff;border:none;border-radius:16px;font-size:15px;font-weight:700;font-family:'Prompt',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;}
 
 .disclaimer{background:#fff8e8;border-radius:10px;padding:10px 14px;margin:0 14px 8px;font-size:11px;color:#9a7040;line-height:1.5;}
 .input-wrap textarea{width:100%;min-height:70px;border:1.5px solid #CCCCCC;outline:none;border-radius:18px;padding:14px 20px;background:#FCFCFC;font-size:15px;font-weight:500;color:#3a2800;font-family:'Prompt',sans-serif;transition:border 0.2s;resize:none;box-sizing:border-box;}
 .input-wrap textarea:focus{border:2px solid #1a5c28;outline:none;}
 .input-wrap textarea::placeholder{color:#CCCCCC;}
 .input-ticker{text-transform:uppercase;}
+/* ── Trade Page ── */
+.trade-tabs{display:flex;gap:8px;margin-bottom:20px;}
+.trade-tab{flex:1;padding:10px;border-radius:12px;border:2px solid #ccc;background:#fff;font-size:15px;font-weight:700;font-family:'Prompt',sans-serif;cursor:pointer;color:#2d7a3a;transition:all 0.2s;text-align:center;user-select:none;-webkit-tap-highlight-color:transparent;pointer-events:all;}
+.trade-tab.active-buy{background:#2d7a3a;border-color:#2d7a3a;color:#fff;}
+.trade-tab.active-sell{background:#2d7a3a;border-color:#2d7a3a;color:#fff;}
+.trade-result-box{background:linear-gradient(135deg,#f0f7e6,#e8f5e9);border:1px solid #c8e6c9;border-radius:14px;padding:12px 16px;margin-top:4px;}
+.trade-result-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
+.trade-result-label{font-size:12px;color:#7a6040;}
+.trade-result-val{font-size:15px;font-weight:700;color:#2d7a3a;}
+.trade-result-val.orange{color:#e07800;}
+.trade-result-val.red{color:#d43434;}
 </style>
 </head>
 <body>
@@ -188,7 +189,8 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
   <br>
   <div class="menu-item active" onclick="goPage('home');toggleMenu()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPgoJPHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIgLz4KCTxwYXRoIGZpbGw9ImN1cnJlbnRDb2xvciIgZD0ibTEyLjg1NyA0LjA2bDUuODY2IDQuODE3Yy4zMy4yNy41MjcuNjg2LjUyNyAxLjEzdjguODAzYzAgLjgxNC0uNjM4IDEuNDQtMS4zODMgMS40NEgxNS4yNVYxNS41YTIuNzUgMi43NSAwIDAgMC0yLjc1LTIuNzVoLTFhMi43NSAyLjc1IDAgMCAwLTIuNzUgMi43NXY0Ljc1SDYuMTMzYy0uNzQ1IDAtMS4zODMtLjYyNi0xLjM4My0xLjQ0di04LjgwMmMwLS40NDUuMTk3LS44Ni41MjctMS4xM2w1Ljg2Ni00LjgxOWExLjM0IDEuMzQgMCAwIDEgMS43MTQgMG01LjAxIDE3LjY5YzEuNjEgMCAyLjg4My0xLjMzNSAyLjg4My0yLjk0di04LjgwMmEyLjk2IDIuOTYgMCAwIDAtMS4wNzUtMi4yOUwxMy44MSAyLjlhMi44NCAyLjg0IDAgMCAwLTMuNjE4IDBMNC4zMjUgNy43MThhMi45NiAyLjk2IDAgMCAwLTEuMDc1IDIuMjl2OC44MDJjMCAxLjYwNSAxLjI3MyAyLjk0IDIuODgzIDIuOTR6IiAvPgo8L3N2Zz4K" style="width:20px;height:20px;filter:brightness(0) saturate(100%) invert(28%) sepia(60%) saturate(500%) hue-rotate(95deg);">หน้าแรก</div>
   <div class="menu-item" onclick="goPage('avg');toggleMenu()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMTYgMTYiPgoJPHBhdGggZD0iTTAgMGgxNnYxNkgweiIgZmlsbD0ibm9uZSIgLz4KCTxwYXRoIGZpbGw9IiMyZDdhM2EiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTTMuNSAxMlY0QTEuNSAxLjUgMCAwIDEgNSAyLjVoNkExLjUgMS41IDAgMCAxIDEyLjUgNHY4YTEuNSAxLjUgMCAwIDEtMS41IDEuNUg1QTEuNSAxLjUgMCAwIDEgMy41IDEyTTUgMTVhMyAzIDAgMCAxLTMtM1Y0YTMgMyAwIDAgMSAzLTNoNmEzIDMgMCAwIDEgMyAzdjhhMyAzIDAgMCAxLTMgM3ptLjUtMTFhMSAxIDAgMSAwIDAgMmg1YTEgMSAwIDEgMCAwLTJ6bTEgN2ExIDEgMCAxIDEtMiAwYTEgMSAwIDAgMSAyIDBNOCAxMmExIDEgMCAxIDAgMC0yYTEgMSAwIDAgMCAwIDJtMy41LTFhMSAxIDAgMSAxLTIgMGExIDEgMCAwIDEgMiAwbS02LTJhMSAxIDAgMSAwIDAtMmExIDEgMCAwIDAgMCAyTTkgOGExIDEgMCAxIDEtMiAwYTEgMSAwIDAgMSAyIDBtMS41IDFhMSAxIDAgMSAwIDAtMmExIDEgMCAwIDAgMCAyIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIC8+Cjwvc3ZnPgo=" style="width:20px;height:20px;flex-shrink:0;">คำนวณราคาเฉลี่ยหุ้น</div>
-  <div class="menu-item" onclick="goPage('div');toggleMenu()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMTYgMTYiPgoJPHBhdGggZD0iTTAgMGgxNnYxNkgweiIgZmlsbD0ibm9uZSIgLz4KCTxwYXRoIGZpbGw9IiMyZDdhM2EiIGQ9Ik0zIDIuNzVWM2guNWEuNS41IDAgMCAwIC41LS41VjJoLS4yNWEuNzUuNzUgMCAwIDAtLjc1Ljc1TTMuNzUgMWg0LjVDOS4yMTYgMSAxMCAxLjc4NCAxMCAyLjc1di41NDNsMi45NzUgMi45NzVBMy41IDMuNSAwIDAgMSAxNCA4Ljc0M1YxNC41YS41LjUgMCAwIDEtMSAwVjguNzQzYTIuNSAyLjUgMCAwIDAtLjczMi0xLjc2OEwxMCA0LjcwN3YyLjU4NWwuODU0Ljg1NGEuNS41IDAgMCAxLS43MDcuNzA4bC0uOTgzLS45ODRsLS4wMzQtLjAzNGwtMS4yMjQtMS4yMjRhLjczOC43MzggMCAxIDAtMS4wNDMgMS4wNDRsMS40OTEgMS40OWEuNS41IDAgMCAxIC4xNDcuMzU0djFhMSAxIDAgMCAwIC45OTkgMWEuNS41IDAgMCAxIC41LjV2MS4yNUExLjc1IDEuNzUgMCAwIDEgOC4yNSAxNWgtNC41QTEuNzUgMS43NSAwIDAgMSAyIDEzLjI1VjIuNzVDMiAxLjc4NCAyLjc4NCAxIDMuNzUgMU04IDE0aC4yNWEuNzUuNzUgMCAwIDAgLjc1LS43NVYxM2gtLjVhLjUuNSAwIDAgMC0uNS41em0uMjEtMS45NzJhMiAyIDAgMCAxLS43MS0xLjUyN3YtLjc5NGwtLjE5My0uMTkzQTIgMiAwIDEgMSA2LjA2NiA2cS4xMi0uMTQuMjc2LS4yNTdhMS43NCAxLjc0IDAgMCAxIDIuMjcxLjE2MUw5IDYuMjkyVjRoLS41QTEuNSAxLjUgMCAwIDEgNyAyLjVWMkg1di41QTEuNSAxLjUgMCAwIDEgMy41IDRIM3Y4aC41QTEuNSAxLjUgMCAwIDEgNSAxMy41di41aDJ2LS41YTEuNSAxLjUgMCAwIDEgMS4yMS0xLjQ3Mk04LjUgM0g5di0uMjVBLjc1Ljc1IDAgMCAwIDguMjUgMkg4di41YS41LjUgMCAwIDAgLjUuNU0zIDEzdi4yNWMwIC40MTQuMzM2Ljc1Ljc1Ljc1SDR2LS41YS41LjUgMCAwIDAtLjUtLjV6bTMuNTk2LTQuMTk3bC0uNDQtLjQ0YTEuNzMgMS43MyAwIDAgMS0uNTA4LTEuM2ExIDEgMCAxIDAgLjk0OCAxLjc0IiAvPgo8L3N2Zz4K" style="width:20px;height:20px;flex-shrink:0;">คำนวณปันผล</div>
+  <div class="menu-item" onclick="goPage('div');toggleMenu()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMTYgMTYiPgoJPHBhdGggZD0iTTAgMGgxNnYxNkgweiIgZmlsbD0ibm9uZSIgLz4KCTxwYXRoIGZpbGw9IiMyZDdhM2EiIGQ9Ik0zIDIuNzVWM2guNWEuNS41IDAgMCAwIC41LS41VjJoLS4yNWEuNzUuNzUgMCAwIDAtLjc1Ljc1TTMuNzUgMWg0LjVDOS4yMTYgMSAxMCAxLjc4NCAxMCAyLjc1di41NDNsMi45NzUgMi45NzVBMy41IDMuNSAwIDAgMSAxNCA4Ljc0M1YxNC41YS41LjUgMCAwIDEtMSAwVjguNzQzYTIuNSAyLjUgMCAwIDAtLjczMi0xLjc2OEwxMCA0LjcwN3YyLjU4NWwuODU0Ljg1NGEuNS41IDAgMCAxLS43MDcuNzA4bC0uOTgzLS45ODRsLS4wMzQtLjAzNGwtMS4yMjQtMS4yMjRhLjczOC43MzggMCAxIDAtMS4wNDMgMS4wNDRsMS40OTEgMS40OWEuNS41IDAgMCAxIC4xNDcuMzU0djFhMSAxIDAgMCAwIC45OTkgMWEuNS41IDAgMCAxIC41LjV2MS4yNUExLjc1IDEuNzUgMCAwIDEgOC4yNSAxNWgtNC41QTEuNzUgMS43NSAwIDAgMSAyIDEzLjI1VjIuNzVDMiAxLjc4NCAyLjc4NCAxIDMuNzUgMSIgLz4KPC9zdmc+Cg==" style="width:20px;height:20px;flex-shrink:0;">คำนวณปันผล</div>
+  <div class="menu-item" onclick="goPage('trade');toggleMenu()">📝 บันทึกการซื้อ-ขายหุ้น</div>
 </div>
 
 <!-- ── HOME PAGE ── -->
@@ -339,13 +341,13 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
     <div class="row">
       <div class="field">
         <div class="field-label">จำนวนหุ้น <span style="color:#e53935;">*</span></div>
-        <div class="input-wrap"><input type="number" id="div-qty" placeholder="100" min="100" step="100"></div>
-        <div class="err-msg" id="err-div-qty">กรุณากรอกจำนวนหุ้น (ขั้นต่ำ 100 หุ้น)</div>
+        <div class="input-wrap"><input type="number" id="div-qty" placeholder="0" min="0"></div>
+        <div class="err-msg" id="err-div-qty">กรุณากรอกจำนวนหุ้น</div>
       </div>
       <div class="field">
         <div class="field-label">ปันผล/หุ้น <span style="color:#e53935;">*</span></div>
         <div class="input-wrap">
-          <input type="number" id="div-dps" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+          <input type="number" id="div-dps" placeholder="0.000000" min="0" step="0.000001" class="has-unit" onblur="fmtInputDps(this)">
           <span class="unit">บาท</span>
         </div>
         <div class="err-msg" id="err-div-dps">กรุณากรอกเงินปันผล/หุ้น</div>
@@ -374,33 +376,42 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 <!-- ── MODAL AVG ── -->
 <div class="modal-overlay" id="modal-avg">
   <div class="modal">
-    <div class="gcard">
-      <div class="g-hero">
-        <div class="g-blob b1"></div>
-        <div class="g-blob b2"></div>
-        <div class="g-hero-top">
-          <button class="g-close" onclick="closeModal('modal-avg')">✕</button>
-        </div>
-        <div class="g-hero-label">ราคาเฉลี่ยใหม่</div>
-        <div class="g-hero-value" id="res-avg-price"></div>
-        <div class="g-hero-meta">
-          <span class="g-chip" id="res-avg-ticker"></span>
-          <span class="g-hero-date" id="res-avg-date"></span>
-        </div>
+    <div class="modal-header">
+      <div class="modal-logo">✦</div>
+      <div class="modal-header-text">
+        <small>น้องถั่ว ถัวหุ้น</small>
+        <strong>ผลการคำนวณราคาเฉลี่ย</strong>
       </div>
-      <div class="g-body">
-        <div class="g-grid">
-          <div class="g-tile"><div class="g-t-label">ราคาเฉลี่ยเดิม</div><div class="g-t-val" id="res-avg-old"></div></div>
-          <div class="g-tile"><div class="g-t-label">ซื้อเพิ่ม</div><div class="g-t-val" id="res-avg-newqty"></div></div>
-          <div class="g-tile"><div class="g-t-label">เงินที่ใช้ซื้อเพิ่ม</div><div class="g-t-val orange" id="res-avg-money"></div></div>
-          <div class="g-tile"><div class="g-t-label">ถือทั้งหมด</div><div class="g-t-val" id="res-avg-qty"></div></div>
-        </div>
-        <div class="g-note">📝 <span id="res-avg-note"></span></div>
-        <div class="g-footer">คำนวณด้วย <strong>น้องถั่ว ถัวหุ้น</strong> · @nongthuastockbean</div>
+      <button class="modal-close" onclick="closeModal('modal-avg')">✕</button>
+    </div>
+    <div class="modal-cards">
+      <div class="cs cs-info">
+        <div class="cs-row"><span class="cs-label">📅 วันที่</span><span class="cs-val" id="res-avg-date"></span></div>
+        <div class="cs-row"><span class="cs-label">📌 ชื่อหุ้น</span><span class="cs-val big" id="res-avg-ticker"></span></div>
+      </div>
+      <div class="cs cs-price">
+        <div class="cs-title">💰 ราคา</div>
+        <div class="cs-row"><span class="cs-label">ราคาเฉลี่ยเดิม</span><span class="cs-val" id="res-avg-old"></span></div>
+        <div class="cs-row"><span class="cs-label">ราคาเฉลี่ยใหม่</span><span class="cs-val green big" id="res-avg-price"></span></div>
+      </div>
+      <div class="cs cs-qty">
+        <div class="cs-title">📦 จำนวนหุ้น</div>
+        <div class="cs-row"><span class="cs-label">ซื้อเพิ่ม</span><span class="cs-val" id="res-avg-newqty"></span></div>
+        <div class="cs-row"><span class="cs-label">ถือทั้งหมด</span><span class="cs-val green" id="res-avg-qty"></span></div>
+      </div>
+      <div class="cs cs-money">
+        <div class="cs-title">💵 เงินที่ใช้</div>
+        <div class="cs-row"><span class="cs-label">จำนวนเงินที่ใช้ซื้อเพิ่ม</span><span class="cs-val orange big" id="res-avg-money"></span></div>
+      </div>
+      <div class="cs cs-note">
+        <div class="cs-row"><span class="cs-label">📝 หมายเหตุ</span><span class="cs-val" id="res-avg-note" style="color:#7a6040;font-weight:500;font-size:12px;"></span></div>
+      </div>
+      <div class="cs cs-footer">
+        <div class="cs-footer-txt">คำนวณด้วย น้องถั่ว ถัวหุ้น &nbsp;@nongthuastockbean</div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-save" onclick="shareResult('avg')">บันทึกข้อมูล</button>
+      <button class="btn-save" onclick="shareResult('avg')">📩 บันทึกข้อมูล</button>
     </div>
   </div>
 </div>
@@ -408,33 +419,42 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 <!-- ── MODAL DIV ── -->
 <div class="modal-overlay" id="modal-div">
   <div class="modal">
-    <div class="gcard">
-      <div class="g-hero">
-        <div class="g-blob b1"></div>
-        <div class="g-blob b2"></div>
-        <div class="g-hero-top">
-          <button class="g-close" onclick="closeModal('modal-div')">✕</button>
-        </div>
-        <div class="g-hero-label">ปันผลสุทธิที่ได้รับ</div>
-        <div class="g-hero-value" id="res-div-net"></div>
-        <div class="g-hero-meta">
-          <span class="g-chip" id="res-div-ticker"></span>
-          <span class="g-hero-date" id="res-div-date"></span>
-        </div>
+    <div class="modal-header">
+      <div class="modal-logo">✦</div>
+      <div class="modal-header-text">
+        <small>น้องถั่ว ถัวหุ้น</small>
+        <strong>ผลการคำนวณเงินปันผล</strong>
       </div>
-      <div class="g-body">
-        <div class="g-grid">
-          <div class="g-tile"><div class="g-t-label">จำนวนหุ้น</div><div class="g-t-val" id="res-div-qty"></div></div>
-          <div class="g-tile"><div class="g-t-label">ปันผล/หุ้น</div><div class="g-t-val" id="res-div-dps"></div></div>
-          <div class="g-tile"><div class="g-t-label">วันประกาศ XD</div><div class="g-t-val" id="res-div-xd"></div></div>
-          <div class="g-tile"><div class="g-t-label">วันจ่ายปันผล</div><div class="g-t-val" id="res-div-paydate"></div></div>
-        </div>
-        <div class="g-note">📝 <span id="res-div-note"></span></div>
-        <div class="g-footer">คำนวณด้วย <strong>น้องถั่ว ถัวหุ้น</strong> · @nongthuastockbean</div>
+      <button class="modal-close" onclick="closeModal('modal-div')">✕</button>
+    </div>
+    <div class="modal-cards">
+      <div class="cs cs-info">
+        <div class="cs-row"><span class="cs-label">📅 วันที่</span><span class="cs-val" id="res-div-date"></span></div>
+        <div class="cs-row"><span class="cs-label">📌 ชื่อหุ้น</span><span class="cs-val big" id="res-div-ticker"></span></div>
+      </div>
+      <div class="cs cs-qty">
+        <div class="cs-row"><span class="cs-label">จำนวนหุ้น</span><span class="cs-val" id="res-div-qty"></span></div>
+        <div class="cs-row"><span class="cs-label">ปันผล/หุ้น</span><span class="cs-val" id="res-div-dps"></span></div>
+        <div class="cs-row"><span class="cs-label">📅 วันประกาศ XD</span><span class="cs-val" id="res-div-xd"></span></div>
+        <div class="cs-row"><span class="cs-label">💸 วันจ่ายปันผล</span><span class="cs-val" id="res-div-paydate"></span></div>
+      </div>
+      <div class="cs cs-div">
+        <div class="cs-row"><span class="cs-label">ปันผลก่อนหักภาษี</span><span class="cs-val orange" id="res-div-gross"></span></div>
+        <div class="cs-row"><span class="cs-label">ภาษีหัก <span id="res-div-taxrate"></span></span><span class="cs-val red" id="res-div-tax"></span></div>
+        <div class="cs-row"><span class="cs-label">ปันผลสุทธิ</span><span class="cs-val green big" id="res-div-net"></span></div>
+      </div>
+      <div class="cs cs-note">
+        <div class="cs-row"><span class="cs-label">📝 หมายเหตุ</span><span class="cs-val" id="res-div-note" style="color:#7a6040;font-weight:500;font-size:12px;"></span></div>
+      </div>
+      <div class="cs cs-note" style="background:#fff8e1;border-color:#ffe082;">
+        <div style="font-size:11px;color:#9a7040;">* ผลการคำนวณนี้ไม่คำนวณการเสียภาษี</div>
+      </div>
+      <div class="cs cs-footer">
+        <div class="cs-footer-txt">คำนวณด้วย น้องถั่ว ถัวหุ้น &nbsp;@nongthuastockbean</div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-save" onclick="shareResult('div')">บันทึกข้อมูล</button>
+      <button class="btn-save" onclick="shareResult('div')">📩 บันทึกข้อมูล</button>
     </div>
   </div>
 </div>
@@ -463,8 +483,8 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
     <div class="row">
       <div class="field">
         <div class="field-label">จำนวนหุ้น</div>
-        <div class="input-wrap"><input type="number" id="ds-qty" placeholder="100" min="100" step="100"></div>
-        <div class="err-msg" id="err-ds-qty">กรุณากรอกจำนวนหุ้น (ขั้นต่ำ 100 หุ้น)</div>
+        <div class="input-wrap"><input type="number" id="ds-qty" placeholder="0" min="0"></div>
+        <div class="err-msg" id="err-ds-qty">กรุณากรอก</div>
       </div>
       <div class="field">
         <div class="field-label">ราคาหุ้นปัจจุบัน</div>
@@ -499,32 +519,142 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 <!-- ── MODAL DIVSTOCK ── -->
 <div class="modal-overlay" id="modal-divstock">
   <div class="modal">
-    <div class="gcard">
-      <div class="g-hero">
-        <div class="g-blob b1"></div>
-        <div class="g-blob b2"></div>
-        <div class="g-hero-top">
-          <button class="g-close" onclick="closeModal('modal-divstock')">✕</button>
-        </div>
-        <div class="g-hero-label">Dividend Yield</div>
-        <div class="g-hero-value" id="res-ds-yield"></div>
-        <div class="g-hero-meta">
-          <span class="g-chip" id="res-ds-ticker"></span>
-          <span class="g-hero-date" id="res-ds-date"></span>
-        </div>
+    <div class="modal-header">
+      <div class="modal-logo">✦</div>
+      <div class="modal-header-text">
+        <small>น้องถั่ว ถัวหุ้น</small>
+        <strong>ผลการคำนวณปันผลหุ้น</strong>
       </div>
-      <div class="g-body">
-        <div class="g-grid">
-          <div class="g-tile"><div class="g-t-label">ปันผลก่อนหักภาษี/ปี</div><div class="g-t-val orange" id="res-ds-gross"></div></div>
-          <div class="g-tile"><div class="g-t-label">ภาษีหัก <span id="res-ds-taxrate"></span></div><div class="g-t-val red" id="res-ds-tax"></div></div>
-          <div class="g-tile full highlight"><div class="g-t-label">ปันผลสุทธิ/ปี</div><div class="g-t-val" id="res-ds-net"></div></div>
-        </div>
-        <div class="g-footer">คำนวณด้วย <strong>น้องถั่ว ถัวหุ้น</strong> · @nongthuastockbean</div>
+      <button class="modal-close" onclick="closeModal('modal-divstock')">✕</button>
+    </div>
+    <div class="modal-cards">
+      <div class="cs cs-info">
+        <div class="cs-row"><span class="cs-label">📌 ชื่อหุ้น</span><span class="cs-val big" id="res-ds-ticker"></span></div>
+      </div>
+      <div class="cs cs-div">
+        <div class="cs-title">📊 Dividend Yield</div>
+        <div class="cs-row"><span class="cs-label">Dividend Yield</span><span class="cs-val green big" id="res-ds-yield"></span></div>
+      </div>
+      <div class="cs cs-money">
+        <div class="cs-title">💰 ผลปันผล/ปี</div>
+        <div class="cs-row"><span class="cs-label">ปันผลก่อนหักภาษี</span><span class="cs-val orange" id="res-ds-gross"></span></div>
+        <div class="cs-row"><span class="cs-label">ภาษีหัก <span id="res-ds-taxrate"></span></span><span class="cs-val red" id="res-ds-tax"></span></div>
+        <div class="cs-row"><span class="cs-label">ปันผลสุทธิ/ปี</span><span class="cs-val green big" id="res-ds-net"></span></div>
+      </div>
+      <div class="cs cs-footer">
+        <div class="cs-footer-txt">คำนวณด้วย น้องถั่ว ถัวหุ้น &nbsp;@nongthuastockbean</div>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-save" onclick="shareResult('divstock')">บันทึกข้อมูล</button>
+      <button class="btn-save" onclick="shareResult('divstock')">📩 บันทึกข้อมูล</button>
     </div>
+  </div>
+</div>
+
+<!-- ── TRADE PAGE ── -->
+<div class="page" id="page-trade">
+  <div class="page-title">
+    <div class="page-title-icon">📝</div>
+    <div>
+      <h2>บันทึกการซื้อ-ขายหุ้น</h2>
+      <p>กรอกข้อมูลการซื้อหรือขายหุ้น</p>
+    </div>
+  </div>
+  <div class="form-card">
+    <!-- Tab Toggle -->
+    <div class="trade-tabs">
+      <input type="radio" name="trade-tab" id="radio-buy" value="buy" checked style="display:none" onchange="switchTradeTab('buy')">
+      <input type="radio" name="trade-tab" id="radio-sell" value="sell" style="display:none" onchange="switchTradeTab('sell')">
+      <label for="radio-buy" class="trade-tab active-buy" id="tab-buy">การซื้อ</label>
+      <label for="radio-sell" class="trade-tab" id="tab-sell">การขาย</label>
+    </div>
+
+    <!-- ── BUY FORM ── -->
+    <div id="trade-buy-form">
+      <div class="field">
+        <div class="field-label">ชื่อหุ้น (Ticker) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="text" id="buy-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();calcBuy()"></div>
+        <div class="err-msg" id="err-buy-ticker">กรุณากรอกชื่อหุ้น</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ราคาหุ้นที่ซื้อ (บาท) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="buy-price" placeholder="0.00" min="0" step="0.01" oninput="calcBuy()"></div>
+        <div class="err-msg" id="err-buy-price">กรุณากรอกราคาหุ้น</div>
+      </div>
+      <div class="field">
+        <div class="field-label">จำนวนหุ้นที่จะซื้อ <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="buy-qty" placeholder="0" min="0" oninput="calcBuy()"></div>
+        <div class="err-msg" id="err-buy-qty">กรุณากรอกจำนวนหุ้น</div>
+      </div>
+      <div class="field">
+        <div class="field-label">จำนวนเงินที่ซื้อ</div>
+        <div class="trade-result-box">
+          <div class="trade-result-row">
+            <span class="trade-result-label">จำนวนเงินที่ใช้ซื้อ</span>
+            <span class="trade-result-val" id="buy-total">0.00 บาท</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">วันที่ซื้อ</div>
+        <div class="input-wrap"><input type="date" id="buy-date" style="padding:0 20px;color:#3a2800;font-family:'Prompt',sans-serif;font-size:15px;"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+        <div class="input-wrap"><textarea id="buy-note" placeholder="บันทึกเพิ่มเติม"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ── SELL FORM ── -->
+    <div id="trade-sell-form" style="display:none;">
+      <div class="field">
+        <div class="field-label">ชื่อหุ้น (Ticker) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="text" id="sell-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();calcSell()"></div>
+        <div class="err-msg" id="err-sell-ticker">กรุณากรอกชื่อหุ้น</div>
+      </div>
+      <div class="field">
+        <div class="field-label">จำนวนหุ้นที่จะขาย <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="sell-qty" placeholder="0" min="0" oninput="calcSell()"></div>
+        <div class="err-msg" id="err-sell-qty">กรุณากรอกจำนวนหุ้น</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ราคาหุ้นเดิม (บาท) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="sell-old-price" placeholder="0.00" min="0" step="0.01" oninput="calcSell()"></div>
+        <div class="err-msg" id="err-sell-old-price">กรุณากรอกราคาหุ้นเดิม</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ราคาหุ้นที่จะขาย (บาท) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="sell-price" placeholder="0.00" min="0" step="0.01" oninput="calcSell()"></div>
+        <div class="err-msg" id="err-sell-price">กรุณากรอกราคาที่จะขาย</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ผลการคำนวณ</div>
+        <div class="trade-result-box">
+          <div class="trade-result-row">
+            <span class="trade-result-label">ราคาทุน</span>
+            <span class="trade-result-val" id="sell-cost">0.00 บาท</span>
+          </div>
+          <div class="trade-result-row">
+            <span class="trade-result-label">ราคาขาย</span>
+            <span class="trade-result-val" id="sell-total">0.00 บาท</span>
+          </div>
+          <div class="trade-result-row" style="border-top:1px solid #c8e6c9;margin-top:6px;padding-top:6px;">
+            <span class="trade-result-label" id="sell-profit-label" style="font-weight:700;">กำไร/ขาดทุน</span>
+            <span class="trade-result-val" id="sell-profit">0.00 บาท</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">วันที่ขาย</div>
+        <div class="input-wrap"><input type="date" id="sell-date" style="padding:0 20px;color:#3a2800;font-family:'Prompt',sans-serif;font-size:15px;"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+        <div class="input-wrap"><textarea id="sell-note" placeholder="บันทึกเพิ่มเติม"></textarea></div>
+      </div>
+    </div>
+
+    <button class="calc-btn" id="trade-submit-btn" onclick="submitTrade()">บันทึก</button>
   </div>
 </div>
 
@@ -540,21 +670,12 @@ function thaiDateNow() {
 }
 
 // Initialize LIFF ONCE when the page loads (not on every share click)
-// Guarded: if the LIFF SDK script failed to load (offline, blocked, opened
-// as a plain local file), `liff` won't exist — without this check that
-// throws synchronously and halts the rest of this script, leaving the
-// whole page inert (no page shown, nothing clickable/typeable).
-const liffInitPromise = (typeof liff === 'undefined')
-  ? Promise.resolve().then(() => {
-      console.error('LIFF SDK failed to load')
-      liffReady = false
-    })
-  : liff.init({ liffId: LIFF_ID })
-      .then(() => { liffReady = true })
-      .catch(err => {
-        console.error('LIFF init failed:', err)
-        liffReady = false
-      })
+const liffInitPromise = liff.init({ liffId: LIFF_ID })
+  .then(() => { liffReady = true })
+  .catch(err => {
+    console.error('LIFF init failed:', err)
+    liffReady = false
+  })
 
 // Read URL parameter and go to correct page on load
 function initPage() {
@@ -631,8 +752,10 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
 
 // Format
 function fmt(n) { return Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2}) }
+function fmt6(n) { return Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:6}) }
 function fmtQty(n) { return Number(n).toLocaleString('th-TH') }
 function fmtInput(el) { if(el.value && !isNaN(el.value)) el.value = parseFloat(el.value).toFixed(2) }
+function fmtInputDps(el) { if(el.value && !isNaN(el.value)) el.value = parseFloat(el.value).toFixed(6).replace(/\.?0+$/, '') }
 
 // Validate
 function validate(fields) {
@@ -686,7 +809,7 @@ function calcAvg() {
 function calcDivStock() {
   const ok = validate([
     {id:'ds-ticker', check: v => v.trim() !== ''},
-    {id:'ds-qty', check: v => v !== '' && +v >= 100},
+    {id:'ds-qty', check: v => v !== '' && +v > 0},
     {id:'ds-price', check: v => v !== '' && +v > 0},
     {id:'ds-dps', check: v => v !== '' && +v > 0},
   ])
@@ -700,7 +823,6 @@ function calcDivStock() {
   const gross = qty * dps
   const tax = gross * (taxRate / 100)
   const net = gross - tax
-  document.getElementById('res-ds-date').textContent = thaiDateNow()
   document.getElementById('res-ds-ticker').textContent = ticker
   document.getElementById('res-ds-yield').textContent = divYield.toFixed(2) + '%'
   document.getElementById('res-ds-gross').textContent = fmt(gross) + ' บาท'
@@ -715,7 +837,7 @@ function calcDivStock() {
 function calcDiv() {
   const ok = validate([
     {id:'div-ticker', check: v => v.trim() !== ''},
-    {id:'div-qty', check: v => v !== '' && +v >= 100},
+    {id:'div-qty', check: v => v !== '' && +v > 0},
     {id:'div-dps', check: v => v !== '' && +v > 0},
   ])
   if (!ok) return
@@ -748,8 +870,11 @@ function calcDiv() {
   document.getElementById('res-div-date').textContent = thaiDateNow()
   document.getElementById('res-div-ticker').textContent = ticker
   document.getElementById('res-div-qty').textContent = fmtQty(qty) + ' หุ้น'
-  document.getElementById('res-div-dps').textContent = fmt(dps) + ' บาท'
-  document.getElementById('res-div-net').textContent = fmt(net) + ' บาท'
+  document.getElementById('res-div-dps').textContent = fmt6(dps) + ' บาท'
+  document.getElementById('res-div-gross').textContent = fmt6(gross) + ' บาท'
+  document.getElementById('res-div-taxrate').textContent = taxRate + '%'
+  document.getElementById('res-div-tax').textContent = '- ' + fmt6(tax) + ' บาท'
+  document.getElementById('res-div-net').textContent = fmt6(net) + ' บาท'
   document.getElementById('res-div-xd').textContent = xdDisplay
   document.getElementById('res-div-paydate').textContent = payDisplay
   document.getElementById('res-div-note').textContent = note || '-'
@@ -805,13 +930,14 @@ Dividend Yield: ${d.divYield.toFixed(2)}%
 ─────────────────
 ชื่อหุ้น : ${divData.ticker}
 จำนวนหุ้น : ${fmtQty(divData.qty)} หุ้น
-ปันผล/หุ้น : ${fmt(divData.dps)} บาท
+ปันผล/หุ้น : ${fmt6(divData.dps)} บาท
 วันประกาศ XD : ${divData.xdDisplay}
 วันจ่ายปันผล : ${divData.payDisplay}
 
-ปันผลสุทธิ: ${fmt(divData.net)} บาท
+ปันผลสุทธิ: ${fmt6(divData.net)} บาท
 
 หมายเหตุ : ${divData.note ? divData.note : '-'}
+* ผลการคำนวณนี้ไม่คำนวณการเสียภาษี
 ─────────────────
 คำนวณด้วย น้องถั่ว ถัวหุ้น @nongthuastockbean`
   }
@@ -834,6 +960,147 @@ Dividend Yield: ${d.divYield.toFixed(2)}%
 
 // Init page from URL param
 initPage()
+
+// Trade tab listeners
+document.addEventListener('DOMContentLoaded', function() {
+  const tabBuy = document.getElementById('tab-buy')
+  const tabSell = document.getElementById('tab-sell')
+  if (tabBuy) tabBuy.addEventListener('click', function() { switchTradeTab('buy') })
+  if (tabSell) tabSell.addEventListener('click', function() { switchTradeTab('sell') })
+})
+// Fallback for LIFF (DOMContentLoaded may have already fired)
+window.addEventListener('load', function() {
+  const tabBuy = document.getElementById('tab-buy')
+  const tabSell = document.getElementById('tab-sell')
+  if (tabBuy) tabBuy.onclick = function() { switchTradeTab('buy') }
+  if (tabSell) tabSell.onclick = function() { switchTradeTab('sell') }
+})
+
+// ── Trade Tab Functions ──
+let currentTradeTab = 'buy'
+function switchTradeTab(tab) {
+  currentTradeTab = tab
+  const buyForm = document.getElementById('trade-buy-form')
+  const sellForm = document.getElementById('trade-sell-form')
+  const buyBtn = document.getElementById('tab-buy')
+  const sellBtn = document.getElementById('tab-sell')
+  if (tab === 'buy') {
+    buyForm.style.display = ''
+    sellForm.style.display = 'none'
+    buyBtn.classList.add('active-buy')
+    sellBtn.classList.remove('active-buy','active-sell')
+  } else {
+    buyForm.style.display = 'none'
+    sellForm.style.display = ''
+    sellBtn.classList.add('active-sell')
+    buyBtn.classList.remove('active-buy','active-sell')
+  }
+}
+
+function calcBuy() {
+  const price = +document.getElementById('buy-price').value || 0
+  const qty = +document.getElementById('buy-qty').value || 0
+  document.getElementById('buy-total').textContent = fmt(price * qty) + ' บาท'
+}
+
+function calcSell() {
+  const qty = +document.getElementById('sell-qty').value || 0
+  const oldPrice = +document.getElementById('sell-old-price').value || 0
+  const newPrice = +document.getElementById('sell-price').value || 0
+  const cost = qty * oldPrice
+  const total = qty * newPrice
+  const profit = total - cost
+  document.getElementById('sell-cost').textContent = fmt(cost) + ' บาท'
+  document.getElementById('sell-total').textContent = fmt(total) + ' บาท'
+  const profitEl = document.getElementById('sell-profit')
+  const profitLabel = document.getElementById('sell-profit-label')
+  if (profit > 0) {
+    profitLabel.textContent = 'กำไร'
+    profitLabel.style.color = '#2d7a3a'
+    profitEl.textContent = '+' + fmt(profit) + ' บาท'
+    profitEl.className = 'trade-result-val green'
+  } else if (profit < 0) {
+    profitLabel.textContent = 'ขาดทุน'
+    profitLabel.style.color = '#d43434'
+    profitEl.textContent = fmt(profit) + ' บาท'
+    profitEl.className = 'trade-result-val red'
+  } else {
+    profitLabel.textContent = 'กำไร/ขาดทุน'
+    profitLabel.style.color = ''
+    profitEl.textContent = '0.00 บาท'
+    profitEl.className = 'trade-result-val'
+  }
+}
+
+async function submitTrade() {
+  let msg = ''
+  if (currentTradeTab === 'buy') {
+    const ticker = document.getElementById('buy-ticker').value.trim()
+    const price = +document.getElementById('buy-price').value
+    const qty = +document.getElementById('buy-qty').value
+    const dateRaw = document.getElementById('buy-date').value
+    const note = document.getElementById('buy-note').value.trim()
+    let valid = true
+    if (!ticker) { document.getElementById('buy-ticker').classList.add('error'); document.getElementById('err-buy-ticker').style.display='block'; valid=false }
+    if (!price) { document.getElementById('buy-price').classList.add('error'); document.getElementById('err-buy-price').style.display='block'; valid=false }
+    if (!qty) { document.getElementById('buy-qty').classList.add('error'); document.getElementById('err-buy-qty').style.display='block'; valid=false }
+    if (!valid) return
+    let dateDisplay = '-'
+    if (dateRaw) { const [y,m,d] = dateRaw.split('-'); const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']; dateDisplay=`${+d} ${months[+m-1]} ${+y+543}` }
+    msg = `🟢 บันทึกการซื้อหุ้น
+วันที่ : ${thaiDateNow()}
+─────────────────
+ชื่อหุ้น : ${ticker}
+ราคาหุ้นที่ซื้อ : ${fmt(price)} บาท
+จำนวนหุ้นที่ซื้อ : ${fmtQty(qty)} หุ้น
+จำนวนเงินที่ซื้อ : ${fmt(price * qty)} บาท
+วันที่ซื้อ : ${dateDisplay}
+หมายเหตุ : ${note || '-'}
+─────────────────
+คำนวณด้วย น้องถั่ว ถัวหุ้น @nongthuastockbean`
+  } else {
+    const ticker = document.getElementById('sell-ticker').value.trim()
+    const qty = +document.getElementById('sell-qty').value
+    const oldPrice = +document.getElementById('sell-old-price').value
+    const newPrice = +document.getElementById('sell-price').value
+    const dateRaw = document.getElementById('sell-date').value
+    const note = document.getElementById('sell-note').value.trim()
+    let valid = true
+    if (!ticker) { document.getElementById('sell-ticker').classList.add('error'); document.getElementById('err-sell-ticker').style.display='block'; valid=false }
+    if (!qty) { document.getElementById('sell-qty').classList.add('error'); document.getElementById('err-sell-qty').style.display='block'; valid=false }
+    if (!oldPrice) { document.getElementById('sell-old-price').classList.add('error'); document.getElementById('err-sell-old-price').style.display='block'; valid=false }
+    if (!newPrice) { document.getElementById('sell-price').classList.add('error'); document.getElementById('err-sell-price').style.display='block'; valid=false }
+    if (!valid) return
+    const cost = qty * oldPrice
+    const total = qty * newPrice
+    const profit = total - cost
+    let dateDisplay = '-'
+    if (dateRaw) { const [y,m,d] = dateRaw.split('-'); const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']; dateDisplay=`${+d} ${months[+m-1]} ${+y+543}` }
+    msg = `🔴 บันทึกการขายหุ้น
+วันที่ : ${thaiDateNow()}
+─────────────────
+ชื่อหุ้น : ${ticker}
+จำนวนหุ้นที่ขาย : ${fmtQty(qty)} หุ้น
+ราคาหุ้นเดิม : ${fmt(oldPrice)} บาท
+ราคาทุน : ${fmt(cost)} บาท
+ราคาหุ้นที่ขาย : ${fmt(newPrice)} บาท
+ราคาขาย : ${fmt(total)} บาท
+กำไร/ขาดทุน : ${profit >= 0 ? '+' : ''}${fmt(profit)} บาท
+วันที่ขาย : ${dateDisplay}
+หมายเหตุ : ${note || '-'}
+─────────────────
+คำนวณด้วย น้องถั่ว ถัวหุ้น @nongthuastockbean`
+  }
+  try {
+    await liffInitPromise
+    if (!liffReady) { alert('เชื่อมต่อ LINE ไม่สำเร็จ กรุณาปิดหน้านี้แล้วเปิดใหม่'); return }
+    if (!liff.isInClient()) { alert('ฟีเจอร์นี้ใช้ได้เฉพาะเมื่อเปิดผ่านแอป LINE เท่านั้น'); return }
+    await liff.sendMessages([{ type: 'text', text: msg }])
+    liff.closeWindow()
+  } catch(e) {
+    alert('ส่งข้อความไม่สำเร็จ: ' + (e.message || 'กรุณาลองใหม่'))
+  }
+}
 
 // Clear errors on input
 document.querySelectorAll('input').forEach(el => {
