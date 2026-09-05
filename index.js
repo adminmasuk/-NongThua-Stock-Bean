@@ -1,5 +1,7 @@
 const express = require('express')
 const line = require('@line/bot-sdk')
+const path = require('path')
+const { Pool } = require('pg')
 
 const config = {
   channelAccessToken: process.env.LINE_TOKEN,
@@ -8,6 +10,12 @@ const config = {
 
 const client = new line.messagingApi.MessagingApiClient(config)
 const app = express()
+
+// เชื่อมต่อ Supabase (PostgreSQL) ผ่าน pg Pool — ใช้ DATABASE_URL ที่ตั้งไว้ใน Render Environment แล้ว
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+})
 
 app.post('/webhook', line.middleware(config), async (req, res) => {
   const events = req.body.events
@@ -57,7 +65,39 @@ Dividend Yield: ${divYield}%
   })
 }
 
-const path = require('path')
+// GET /api/xd-calendar — ปฏิทินหลักทรัพย์ (Phase 5) อ่านจากตาราง public.xd_calendar ใน Supabase
+app.get('/api/xd-calendar', async (req, res) => {
+  try {
+    const { type, upcoming } = req.query
+    const conditions = []
+    const values = []
+
+    if (type) {
+      values.push(type)
+      conditions.push(`type = $${values.length}`)
+    }
+    if (upcoming === 'true') {
+      conditions.push('xd_date >= current_date')
+    }
+
+    const whereClause = conditions.length ? `where ${conditions.join(' and ')}` : ''
+    const sql = `
+      select
+        id, ticker, type, xd_date, record_date, book_close_date, pay_date,
+        dps, category, period_start, period_end, dividend_source, yield_pct
+      from public.xd_calendar
+      ${whereClause}
+      order by xd_date asc
+      limit 100
+    `
+    const { rows } = await pool.query(sql, values)
+    res.json({ ok: true, data: rows })
+  } catch (err) {
+    console.error('GET /api/xd-calendar error:', err)
+    res.status(500).json({ ok: false, error: 'โหลดข้อมูลปฏิทินหลักทรัพย์ไม่สำเร็จ' })
+  }
+})
+
 app.use(express.static(__dirname))
 app.get('/liff', (req, res) => {
   res.sendFile(path.join(__dirname, 'liff_final.html'))
