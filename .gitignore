@@ -1,2 +1,9 @@
 node_modules/
 .claude/
+
+.DS_Store
+*.zip
+*.md
+*.sql
+liff_final_latest.html
+Nongthua Landing Page.html
