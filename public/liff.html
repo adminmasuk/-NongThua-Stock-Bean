@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-<link rel="stylesheet" href="/css/style.css?v=20261030">
+<link rel="stylesheet" href="/css/style.css?v=20261030c">
 </head>
 <body>
 <div class="app-wrap">
@@ -427,11 +427,32 @@
       <p>วันขึ้นเครื่องหมาย XD · XM · XR</p>
     </div>
   </div>
-  <div class="xd-legend" aria-label="ความหมายของเครื่องหมาย">
-    <div class="xd-legend-card"><div class="xd-legend-code">XD</div><div class="xd-legend-text">ไม่ได้รับ<br>เงินปันผล</div></div>
-    <div class="xd-legend-card"><div class="xd-legend-code">XM</div><div class="xd-legend-text">ไม่มีสิทธิ<br>เข้าประชุม</div></div>
-    <div class="xd-legend-card"><div class="xd-legend-code">XR</div><div class="xd-legend-text">ไม่ได้สิทธิ<br>จองหุ้นเพิ่มทุน</div></div>
-  </div>
+  <section class="xd-info-card" aria-label="ความหมายของเครื่องหมาย">
+    <div class="xd-info-item t-XD">
+      <button type="button" class="xd-info-btn" aria-expanded="false" aria-controls="xd-info-desc-XD" onclick="toggleXdInfo(this)">
+        <span class="xd-info-code" aria-hidden="true">XD</span>
+        <span class="xd-info-main"><span class="xd-info-en">Excluding Dividend <span class="sr-only">(XD)</span></span><span class="xd-info-pill">ไม่มีสิทธิรับเงินปันผล</span></span>
+        <span class="xd-info-chev" aria-hidden="true">›</span>
+      </button>
+      <p class="xd-info-desc" id="xd-info-desc-XD" hidden>หุ้นที่ซื้อในวันที่ขึ้นเครื่องหมาย XD จะไม่ได้รับเงินปันผลรอบนั้น ผู้ที่ซื้อหุ้นก่อนวัน XD และมีคุณสมบัติตามเกณฑ์จะได้รับสิทธิ</p>
+    </div>
+    <div class="xd-info-item t-XM">
+      <button type="button" class="xd-info-btn" aria-expanded="false" aria-controls="xd-info-desc-XM" onclick="toggleXdInfo(this)">
+        <span class="xd-info-code" aria-hidden="true">XM</span>
+        <span class="xd-info-main"><span class="xd-info-en">Excluding Meeting <span class="sr-only">(XM)</span></span><span class="xd-info-pill">ไม่มีสิทธิเข้าประชุม</span></span>
+        <span class="xd-info-chev" aria-hidden="true">›</span>
+      </button>
+      <p class="xd-info-desc" id="xd-info-desc-XM" hidden>หุ้นที่ซื้อในวันที่ขึ้นเครื่องหมาย XM จะไม่มีสิทธิเข้าร่วมประชุมผู้ถือหุ้นในครั้งนั้น เช่น การประชุมสามัญประจำปี (AGM) หรือประชุมวิสามัญ (EGM)</p>
+    </div>
+    <div class="xd-info-item t-XR">
+      <button type="button" class="xd-info-btn" aria-expanded="false" aria-controls="xd-info-desc-XR" onclick="toggleXdInfo(this)">
+        <span class="xd-info-code" aria-hidden="true">XR</span>
+        <span class="xd-info-main"><span class="xd-info-en">Excluding Right <span class="sr-only">(XR)</span></span><span class="xd-info-pill">ไม่มีสิทธิจองซื้อหุ้นเพิ่มทุน</span></span>
+        <span class="xd-info-chev" aria-hidden="true">›</span>
+      </button>
+      <p class="xd-info-desc" id="xd-info-desc-XR" hidden>หุ้นที่ซื้อในวันที่ขึ้นเครื่องหมาย XR จะไม่ได้รับสิทธิจองซื้อหุ้นเพิ่มทุนตามเงื่อนไขที่บริษัทกำหนด</p>
+    </div>
+  </section>
   <hr class="xd-divider">
   <div class="xd-filter-row">
     <div class="xd-search">
@@ -646,7 +667,7 @@
 
 <script src="/js/app.js?v=20261030"></script>
 <script src="/js/package.js?v=20261030"></script>
-<script src="/js/calendar.js?v=20261030"></script>
+<script src="/js/calendar.js?v=20261030c"></script>
 <script src="/js/trade.js?v=20261030"></script>
 
 <!-- Image Preview Overlay -->

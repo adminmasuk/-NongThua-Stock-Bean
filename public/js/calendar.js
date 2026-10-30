@@ -48,7 +48,7 @@ function buildXdItemHtml(item, prefix) {
       <div class="xd-item" onclick="toggleXdDetail('${key}')">
         <div class="xd-date"><span class="xd-day">${ex.day}</span><span class="xd-month">${ex.month}</span></div>
         <div class="xd-info">
-          <div class="xd-name">${item.ticker} <span class="xd-tag">${item.type}</span></div>
+          <div class="xd-name">${item.ticker} <span class="xd-tag t-${item.type}">${item.type}</span></div>
           <div class="xd-detail">${buildXdSummaryLine(item)}</div>
         </div>
         <div class="xd-yield">${yieldDisplay} <span>Yield</span></div>
@@ -221,9 +221,19 @@ function closeXdAdv() {
   const btn = document.getElementById('xd-adv-btn'); if (btn) btn.focus()
 }
 document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return
   const sh = document.getElementById('xd-adv-sheet')
-  if (e.key === 'Escape' && sh && !sh.hidden) closeXdAdv()
+  if (sh && !sh.hidden) closeXdAdv()
 })
+
+
+// การ์ดความหมาย XD / XM / XR — แตะที่เครื่องหมายเพื่อแสดง/ซ่อนคำอธิบาย
+function toggleXdInfo(btn) {
+  const open = btn.getAttribute('aria-expanded') !== 'true'
+  btn.setAttribute('aria-expanded', open)
+  const panel = document.getElementById(btn.getAttribute('aria-controls'))
+  if (panel) panel.hidden = !open
+}
 
 function applyXdAdv() {
   xdAdv = JSON.parse(JSON.stringify(xdAdvDraft))

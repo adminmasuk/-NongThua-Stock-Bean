@@ -133,15 +133,31 @@ body{font-family:'Prompt',sans-serif;background:#e3ede8;min-height:100vh;color:#
 .xd-month{display:block;font-size:10px;color:#1a5c28;}
 .xd-info{flex:1;min-width:0;}
 .xd-name{font-size:14px;font-weight:600;color:#1a1a1a;display:flex;align-items:center;gap:6px;}
-.xd-tag{background:#e8f0ff;color:#1a3aad;font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;}
+.xd-tag{background:var(--xd-bg,#e8f0ff);color:var(--xd-fg,#1a3aad);font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;}
 .xd-detail{font-size:12px;color:#555555;margin-top:2px;}
 .xd-yield{font-size:14px;font-weight:700;color:#1a5c28;text-align:right;flex-shrink:0;}
 .xd-yield span{display:block;font-size:10px;font-weight:500;color:#555555;}
 .xd-empty{padding:24px;text-align:center;font-size:13px;color:#555555;}
-.xd-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 16px 12px;}
-.xd-legend-card{background:#fff;border:1px solid #e6ece6;border-radius:14px;padding:12px 6px;text-align:center;min-width:0;}
-.xd-legend-code{font-size:18px;font-weight:700;color:#1a5c28;line-height:1.3;}
-.xd-legend-text{font-size:12px;color:#555;line-height:1.45;margin-top:4px;}
+/* สีประจำเครื่องหมาย — ใช้ร่วมกันทั้งการ์ดอธิบาย, ป้ายในรายการ และ bottom sheet (contrast ≥ 7:1 ทุกคู่) */
+.t-XD{--xd-fg:#1d3f8f;--xd-bg:#e8f0ff;}
+.t-XM{--xd-fg:#5b2a86;--xd-bg:#f1e8fb;}
+.t-XR{--xd-fg:#1f5a2a;--xd-bg:#e6f2e8;}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+/* การ์ดความหมายเครื่องหมาย XD / XM / XR (ตามดีไซน์) */
+.xd-info-card{background:#fcfcfd;border:1.5px solid #e3e5e8;border-radius:20px;padding:2px 8px;margin:0 16px 12px;}
+.xd-info-item+.xd-info-item{border-top:1px solid #e9ebee;}
+.xd-info-btn{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:8px;background:none;border:none;border-radius:12px;text-align:left;font-family:'Prompt',sans-serif;cursor:pointer;color:inherit;}
+.xd-info-btn:focus-visible{outline:3px solid #4CAF50;outline-offset:-3px;}
+.xd-info-btn:active{background:#f3f5f3;}
+.xd-info-code{flex-shrink:0;width:44px;height:44px;border-radius:12px;background:var(--xd-bg);color:var(--xd-fg);font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+.xd-info-main{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.xd-info-en{font-size:16px;font-weight:600;color:#1a1a1a;line-height:1.4;}
+.xd-info-pill{display:inline-block;background:var(--xd-bg);color:var(--xd-fg);font-size:14px;font-weight:600;padding:0 10px;border-radius:99px;line-height:1.6;}
+.xd-info-chev{flex-shrink:0;width:24px;text-align:center;font-size:24px;line-height:1;color:#555;transform:rotate(90deg);transition:transform .15s ease;}
+.xd-info-btn[aria-expanded="true"] .xd-info-chev{transform:rotate(-90deg);}
+.xd-info-desc{margin:0;padding:0 8px 14px 64px;font-size:16px;color:#1a1a1a;line-height:1.6;}
+.xd-info-desc[hidden]{display:none;}
+@media (prefers-reduced-motion:reduce){.xd-info-chev{transition:none;}}
 .xd-divider{border:none;height:1px;background:#cfdcd2;margin:4px 16px 16px;}
 .xd-filter-row{display:flex;gap:8px;margin:0 16px 2px;}
 .xd-search{position:relative;flex:1;min-width:0;}
