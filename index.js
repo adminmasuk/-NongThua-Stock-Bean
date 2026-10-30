@@ -98,9 +98,11 @@ app.get('/api/xd-calendar', async (req, res) => {
   }
 })
 
-app.use(express.static(__dirname))
+// หน้าเว็บ LIFF แยกไฟล์อยู่ในโฟลเดอร์ public/ (liff.html, css/, js/, img/)
+// เปิดให้เข้าถึงเฉพาะโฟลเดอร์ public — ไฟล์โค้ดฝั่ง server (index.js ฯลฯ) จะไม่ถูกเปิดให้ดาวน์โหลด
+app.use(express.static(path.join(__dirname, 'public')))
 app.get('/liff', (req, res) => {
-  res.sendFile(path.join(__dirname, 'liff_final.html'))
+  res.sendFile(path.join(__dirname, 'public', 'liff.html'))
 })
 
 const PORT = process.env.PORT || 3000

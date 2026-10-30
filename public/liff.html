@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>น้องถั่ว ถัวหุ้น</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261030">
+</head>
+<body>
+<div class="app-wrap">
+
+<!-- Header -->
+<div class="header">
+  <button class="hamburger" onclick="toggleMenu()"><img src="/img/icon-8b59b619.svg" style="width:22px;height:22px;filter:brightness(0) invert(1);"></button>
+  <div class="header-left">
+    <img src="/img/logo.png" class="header-bean" alt="น้องถั่ว">
+    <div class="header-info">
+      <strong>น้องถั่ว ถัวหุ้น</strong>
+      <small>@nongthuastockbean</small>
+    </div>
+  </div>
+</div>
+
+<!-- Menu -->
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+<div class="menu-panel" id="menuPanel">
+  <button class="menu-close" onclick="toggleMenu()">✕</button>
+  <br>
+  <div class="menu-item active" onclick="goPage('home');toggleMenu()"><img src="/img/icon-55a6cc6f.svg" style="width:19.63px;height:19.63px;flex-shrink:0;margin:0 0.19px;filter:brightness(0) saturate(100%) invert(28%) sepia(60%) saturate(500%) hue-rotate(95deg);">หน้าแรก</div>
+  <div class="menu-item" onclick="goPage('avg');toggleMenu()"><img src="/img/icon-1303c547.svg" style="width:18.29px;height:18.29px;flex-shrink:0;margin:0 0.86px;">คำนวณราคาเฉลี่ยหุ้น</div>
+  <div class="menu-item" onclick="goPage('div');toggleMenu()"><img src="/img/icon-244bcc84.svg" style="width:16.0px;height:16.0px;flex-shrink:0;margin:0 2.0px;">คำนวณปันผล</div>
+  <div class="menu-item" onclick="goPage('trade');toggleMenu()"><img src="/img/icon-c21cf7a9.svg" style="width:17.88px;height:17.88px;flex-shrink:0;margin:0 1.06px;">บันทึกการซื้อ-ขายหุ้น</div>
+  <div class="menu-item" onclick="goPage('xd');window.scrollTo(0,0);toggleMenu()"><img src="/img/icon-f68f5f18.svg" style="width:16.0px;height:16.0px;flex-shrink:0;margin:0 2.0px;">ปฏิทินหลักทรัพย์</div>
+  <div class="menu-item" onclick="goPage('pkg');window.scrollTo(0,0);toggleMenu()"><img src="/img/icon-9c061fa7.svg" style="width:18.82px;height:18.82px;flex-shrink:0;margin:0 0.59px;">แพ็กเกจ</div>
+</div>
+
+<!-- ── HOME PAGE ── -->
+<div class="page active" id="page-home">
+  <!-- Profile + Credit Summary -->
+  <div class="profile-credit-card">
+    <div class="profile-row">
+      <div class="profile-avatar"><img src="/img/icon-72025d79.svg" style="width:24px;height:24px;"></div>
+      <div class="profile-info">
+        <div class="profile-name-row">
+          <span id="profile-name" class="profile-name">นักลงทุน</span>
+          <span class="profile-tier-badge">FREE</span>
+        </div>
+        <div class="profile-sub" id="profile-sub">เข้าสู่ระบบผ่าน LINE</div>
+      </div>
+    </div>
+    <div class="profile-divider"></div>
+    <div class="credit-section">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+        <span class="credit-label">เครดิตคงเหลือเดือนนี้</span>
+        <span class="credit-reset" id="credit-reset-text">รีเซ็ต —</span>
+      </div>
+      <div class="credit-number"><span id="credit-remaining-text">10</span><span class="credit-number-total"> / 30 เครดิต</span></div>
+      <div class="credit-track"><div id="credit-progress-fill" class="credit-fill" style="width:66.67%"></div></div>
+      <div class="credit-used-text" id="credit-used-text">ใช้ไป 20 จาก 30 เครดิต</div>
+    </div>
+  </div>
+
+  <!-- XD Calendar (ข้อมูลตัวอย่าง — ยังไม่เชื่อมข้อมูลหุ้นจริง) -->
+  <div class="section-header-row sh" id="xd-section">
+    <div class="sh-icon"><img src="/img/icon-143e87f8.svg" alt=""></div>
+    <div class="sh-text">
+      <span class="section-label">ปฏิทินหลักทรัพย์ประจำเดือน</span>
+    </div>
+    <span class="section-more" onclick="goPage('xd');window.scrollTo(0,0)">ดูเพิ่มเติม<span class="section-more-icon">›</span></span>
+  </div>
+  <div class="xd-tabs">
+    <button class="xd-tab active" data-filter="all" onclick="filterXdCalendar('all')">ทั้งหมด</button>
+    <button class="xd-tab" data-filter="XD" onclick="filterXdCalendar('XD')">XD</button>
+    <button class="xd-tab" data-filter="XM" onclick="filterXdCalendar('XM')">XM</button>
+    <button class="xd-tab" data-filter="XR" onclick="filterXdCalendar('XR')">XR</button>
+  </div>
+  <div class="xd-pager" id="xd-pager"></div>
+  <div class="xd-dots" id="xd-dots"></div>
+  <div class="xd-empty" id="xd-empty" style="display:none;">ไม่มีรายการในหมวดนี้</div>
+  <!-- Banner -->
+  <div class="banner-card"><img src="/img/banner.jpg" alt="น้องถั่ว ถัวหุ้น - หยุดคำนวณมือ เริ่มให้บอทคำนวณแทน"></div>
+
+
+  <!-- Plans -->
+  <div class="section-header-row sh" id="plans-section">
+    <div class="sh-icon"><img src="/img/icon-bb881483.svg" alt=""></div>
+    <div class="sh-text">
+      <span class="section-label">แพ็กเกจ</span>
+      <div class="section-subtext">เลือกแพ็กเกจที่เหมาะกับการลงทุนของคุณ</div>
+    </div>
+  </div>
+  <div class="plans-stack">
+    <div class="plan-card-v2 current">
+      <div class="plan-card-v2-head">
+        <span class="plan-card-v2-name">Free</span>
+        <span class="plan-card-v2-badge current-badge">ใช้งานอยู่</span>
+      </div>
+      <div class="plan-card-v2-price">0 บาท<span>ตลอดชีพ</span></div>
+      <div class="plan-card-v2-sub">30 เครดิต/เดือน</div>
+      <ul class="plan-card-v2-features">
+        <li>คำนวณราคาเฉลี่ย</li>
+        <li>คำนวณปันผล</li>
+        <li>บันทึกซื้อ-ขายหุ้น</li>
+      </ul>
+      <div class="plan-card-v2-status">แพ็กเกจของคุณ</div>
+    </div>
+    <div class="plan-card-v2 pro">
+      <div class="plan-card-v2-head">
+        <span class="plan-card-v2-name">Pro</span>
+      </div>
+      <div class="plan-card-v2-price">99 บาท<span>ต่อปี</span></div>
+      <div class="plan-card-v2-sub">เครดิตไม่จำกัด</div>
+      <ul class="plan-card-v2-features">
+        <li>ใช้ได้ทุกเมนู</li>
+        <li>ใช้ได้ไม่จำกัดครั้ง</li>
+      </ul>
+      <button class="plan-card-v2-btn" type="button" disabled>เร็วๆ นี้</button>
+    </div>
+  </div>
+  <button type="button" class="plans-more" onclick="goPage('pkg');window.scrollTo(0,0)">ดูรายละเอียดแพ็กเกจ<span aria-hidden="true">›</span></button>
+
+
+  <!-- Contact -->
+  <div class="section-header-row sh">
+    <div class="sh-icon"><img src="/img/icon-231d364f.svg" alt=""></div>
+    <div class="sh-text">
+      <span class="section-label">ติดต่อเรา</span>
+      <div class="section-subtext">มีคำถามหรือข้อเสนอแนะ ทักได้เลย</div>
+    </div>
+  </div>
+  <div class="contact-list">
+    <a class="contact-item" href="https://line.me/R/ti/p/@nongthuastockbean" target="_blank" rel="noopener" aria-label="แชทกับน้องถั่วใน LINE">
+      <div class="contact-left">
+        <div class="contact-icon icon-line"><img src="/img/icon-1ad5345e.svg" alt="" style="width:22px;height:22px;"></div>
+        <div>
+          <div class="contact-name">LINE Official</div>
+          <div class="contact-val">@nongthuastockbean</div>
+        </div>
+      </div>
+      <span class="contact-arrow">›</span>
+    </a>
+    <a class="contact-item" href="https://www.tiktok.com/@nongthuastockbean" target="_blank" rel="noopener" aria-label="ติดตามน้องถั่วบน TikTok">
+      <div class="contact-left">
+        <div class="contact-icon icon-tiktok"><img src="/img/icon-9161094d.svg" alt="" style="width:22px;height:22px;"></div>
+        <div>
+          <div class="contact-name">TikTok</div>
+          <div class="contact-val">@nongthuastockbean</div>
+        </div>
+      </div>
+      <span class="contact-arrow">›</span>
+    </a>
+    <a class="contact-item" href="mailto:nongthuastockbean@gmail.com">
+      <div class="contact-left">
+        <div class="contact-icon icon-green"><img src="/img/icon-9bf109e8.svg" style="width:20px;height:20px;filter:brightness(0) saturate(100%) invert(28%) sepia(60%) saturate(500%) hue-rotate(95deg);"></div>
+        <div>
+          <div class="contact-name">อีเมล</div>
+          <div class="contact-val">nongthuastockbean@gmail.com</div>
+        </div>
+      </div>
+      <span class="contact-arrow">›</span>
+    </a>
+  </div>
+  </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- ── AVG COST PAGE ── -->
+<div class="page" id="page-avg">
+  <div class="page-title">
+    <div class="page-title-icon"><img src="/img/icon-5f64a0bb.svg" style="width:24px;height:24px;flex-shrink:0;"></div>
+    <div class="page-title-text">
+      <h2>คำนวณราคาเฉลี่ยหุ้น</h2>
+      <p>กรอกข้อมูลหุ้นเดิมและที่ซื้อเพิ่ม</p>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="field">
+      <div class="field-label">ชื่อหุ้น (Ticker) <span style="color:#e53935;">*</span></div>
+      <div class="input-wrap"><input type="text" id="avg-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase()"></div>
+      <div class="err-msg" id="err-avg-ticker">กรุณากรอกชื่อหุ้น</div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <div class="field-label">จำนวนหุ้นเดิม <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="avg-oldQty" placeholder="100" min="100" step="100"></div>
+        <div class="err-msg" id="err-avg-oldQty">กรุณากรอกจำนวนหุ้นเดิม (ขั้นต่ำ 100 หุ้น)</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ราคาเฉลี่ยเดิม <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap">
+          <input type="number" id="avg-oldPrice" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+          <span class="unit">บาท</span>
+        </div>
+        <div class="err-msg" id="err-avg-oldPrice">กรุณากรอกราคาเฉลี่ยเดิม</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <div class="field-label">จำนวนหุ้นที่ซื้อเพิ่ม <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="avg-newQty" placeholder="100" min="100" step="100"></div>
+        <div class="err-msg" id="err-avg-newQty">กรุณากรอกจำนวนหุ้นที่ซื้อเพิ่ม (ขั้นต่ำ 100 หุ้น)</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ราคาที่ซื้อเพิ่ม <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap">
+          <input type="number" id="avg-newPrice" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+          <span class="unit">บาท</span>
+        </div>
+        <div class="err-msg" id="err-avg-newPrice">กรุณากรอกราคาที่ซื้อเพิ่ม</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+      <div class="input-wrap"><textarea id="avg-note" placeholder="บันทึกเพิ่มเติม เช่น เหตุผลที่ซื้อเพิ่ม"></textarea></div>
+    </div>
+  </div>
+  <button class="calc-btn" onclick="calcAvg()">คำนวณราคาเฉลี่ย</button>
+</div>
+
+<!-- ── DIVIDEND PAGE ── -->
+<div class="page" id="page-div">
+  <div class="page-title">
+    <div class="page-title-icon"><img src="/img/icon-223d2ef8.svg" style="width:28px;height:28px;flex-shrink:0;"></div>
+    <div class="page-title-text">
+      <h2>คำนวณเงินปันผล</h2>
+      <p>ประเมินรายได้และอัตราผลตอบแทน</p>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="field">
+      <div class="field-label">ชื่อหุ้น (Ticker) <span style="color:#e53935;">*</span></div>
+      <div class="input-wrap"><input type="text" id="div-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase()"></div>
+      <div class="err-msg" id="err-div-ticker">กรุณากรอกชื่อหุ้น</div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <div class="field-label">จำนวนหุ้น <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="div-qty" placeholder="0" min="0"></div>
+        <div class="err-msg" id="err-div-qty">กรุณากรอกจำนวนหุ้น</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ปันผล/หุ้น <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap">
+          <input type="number" id="div-dps" placeholder="0.000000" min="0" step="0.000001" class="has-unit" onblur="fmtInputDps(this)">
+          <span class="unit">บาท</span>
+        </div>
+        <div class="err-msg" id="err-div-dps">กรุณากรอกเงินปันผล/หุ้น</div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">วันประกาศ XD</div>
+      <div class="input-wrap">
+        <input type="date" id="div-xd" style="padding:0 20px;color:#3a2800;font-family:'Prompt',sans-serif;font-size:15px;">
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">วันจ่ายปันผล</div>
+      <div class="input-wrap">
+        <input type="date" id="div-paydate" style="padding:0 20px;color:#3a2800;font-family:'Prompt',sans-serif;font-size:15px;">
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+      <div class="input-wrap"><textarea id="div-note" placeholder="บันทึกเพิ่มเติม"></textarea></div>
+    </div>
+  </div>
+  <button class="calc-btn" onclick="calcDiv()">คำนวณเงินปันผล</button>
+</div>
+
+<!-- ── MODAL AVG ── -->
+<div class="modal-overlay" id="modal-avg">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">ผลการคำนวณราคาเฉลี่ย</h3>
+      <button class="modal-close" aria-label="ปิด" onclick="closeModal('modal-avg')">✕</button>
+    </div>
+    <div class="modal-cards">
+      <div class="res-hero">
+        <div class="res-hero-top"><span class="res-ticker" id="res-avg-ticker"></span><span class="res-date" id="res-avg-date"></span></div>
+        <div class="res-hero-label">ราคาเฉลี่ยใหม่</div>
+        <div class="res-hero-val" id="res-avg-price"></div>
+      </div>
+      <div class="res-group">
+        <div class="res-row"><span class="res-label">ราคาเฉลี่ยเดิม</span><span class="res-val " id="res-avg-old"></span></div>
+        <div class="res-row"><span class="res-label">ซื้อเพิ่ม</span><span class="res-val " id="res-avg-newqty"></span></div>
+        <div class="res-row"><span class="res-label">ถือทั้งหมด</span><span class="res-val green" id="res-avg-qty"></span></div>
+        <div class="res-row total"><span class="res-label">เงินที่ใช้ซื้อเพิ่ม</span><span class="res-val orange" id="res-avg-money"></span></div>
+      </div>
+      <div class="res-group">
+        <div class="res-group-title">หมายเหตุ</div>
+        <div class="res-note" id="res-avg-note"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="shareResult('avg')">บันทึกข้อมูล</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL DIV ── -->
+<div class="modal-overlay" id="modal-div">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">ผลการคำนวณเงินปันผล</h3>
+      <button class="modal-close" aria-label="ปิด" onclick="closeModal('modal-div')">✕</button>
+    </div>
+    <div class="modal-cards">
+      <div class="res-hero">
+        <div class="res-hero-top"><span class="res-ticker" id="res-div-ticker"></span><span class="res-date" id="res-div-date"></span></div>
+        <div class="res-hero-label">ปันผลสุทธิ</div>
+        <div class="res-hero-val" id="res-div-net"></div>
+      </div>
+      <div class="res-group">
+        <div class="res-row"><span class="res-label">จำนวนหุ้น</span><span class="res-val " id="res-div-qty"></span></div>
+        <div class="res-row"><span class="res-label">ปันผล/หุ้น</span><span class="res-val " id="res-div-dps"></span></div>
+        <div class="res-row"><span class="res-label">วันประกาศ XD</span><span class="res-val " id="res-div-xd"></span></div>
+        <div class="res-row"><span class="res-label">วันจ่ายปันผล</span><span class="res-val " id="res-div-paydate"></span></div>
+      </div>
+      <div class="res-group">
+        <div class="res-row"><span class="res-label">ปันผลก่อนหักภาษี</span><span class="res-val " id="res-div-gross"></span></div>
+        <div class="res-row"><span class="res-label">ภาษีหัก <span id="res-div-taxrate"></span></span><span class="res-val red" id="res-div-tax"></span></div>
+      </div>
+      <div class="res-group">
+        <div class="res-group-title">หมายเหตุ</div>
+        <div class="res-note" id="res-div-note"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="shareResult('div')">บันทึกข้อมูล</button>
+    </div>
+  </div>
+</div>
+
+    <div class="nav-item" id="nav-avg" onclick="goPage('avg')"></div>
+    <div class="nav-item" id="nav-div" onclick="goPage('div')"></div>
+  </div>
+</div>
+
+
+<!-- ── DIVIDEND STOCK PAGE ── -->
+<div class="page" id="page-divstock">
+  <div class="page-title">
+    <div class="page-title-icon">📊</div>
+    <div class="page-title-text">
+      <h2>คำนวณการจ่ายปันผลหุ้น</h2>
+      <p>คำนวณ Dividend Yield และรายได้จากปันผล</p>
+    </div>
+  </div>
+  <div class="form-card">
+    <div class="field">
+      <div class="field-label">ชื่อหุ้น (Ticker)</div>
+      <div class="input-wrap"><input type="text" id="ds-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase()"></div>
+      <div class="err-msg" id="err-ds-ticker">กรุณากรอกชื่อหุ้น</div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <div class="field-label">จำนวนหุ้น</div>
+        <div class="input-wrap"><input type="number" id="ds-qty" placeholder="0" min="0"></div>
+        <div class="err-msg" id="err-ds-qty">กรุณากรอก</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ราคาหุ้นปัจจุบัน</div>
+        <div class="input-wrap">
+          <input type="number" id="ds-price" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+          <span class="unit">บาท</span>
+        </div>
+        <div class="err-msg" id="err-ds-price">กรุณากรอก</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <div class="field-label">ปันผลต่อหุ้น/ปี</div>
+        <div class="input-wrap">
+          <input type="number" id="ds-dps" placeholder="0.00" min="0" step="0.01" class="has-unit" onblur="fmtInput(this)">
+          <span class="unit">บาท</span>
+        </div>
+        <div class="err-msg" id="err-ds-dps">กรุณากรอก</div>
+      </div>
+      <div class="field">
+        <div class="field-label">ภาษีหัก ณ ที่จ่าย</div>
+        <div class="input-wrap">
+          <input type="number" id="ds-tax" placeholder="10" value="10" min="0" max="100" class="has-unit">
+          <span class="unit">%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="calc-btn" onclick="calcDivStock()">คำนวณการจ่ายปันผล</button>
+</div>
+
+<!-- ── MODAL DIVSTOCK ── -->
+<div class="modal-overlay" id="modal-divstock">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">ผลการคำนวณปันผลหุ้น</h3>
+      <button class="modal-close" aria-label="ปิด" onclick="closeModal('modal-divstock')">✕</button>
+    </div>
+    <div class="modal-cards">
+      <div class="res-hero">
+        <div class="res-hero-top"><span class="res-ticker" id="res-ds-ticker"></span></div>
+        <div class="res-hero-label">ปันผลสุทธิต่อปี</div>
+        <div class="res-hero-val" id="res-ds-net"></div>
+      </div>
+      <div class="res-group">
+        <div class="res-row"><span class="res-label">Dividend Yield</span><span class="res-val green" id="res-ds-yield"></span></div>
+        <div class="res-row"><span class="res-label">ปันผลก่อนหักภาษี/ปี</span><span class="res-val " id="res-ds-gross"></span></div>
+        <div class="res-row"><span class="res-label">ภาษีหัก <span id="res-ds-taxrate"></span></span><span class="res-val red" id="res-ds-tax"></span></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-save" onclick="shareResult('divstock')">บันทึกข้อมูล</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── XD CALENDAR PAGE ── -->
+<div class="page" id="page-xd">
+  <div class="page-title">
+    <div class="page-title-icon"><img src="/img/icon-143e87f8.svg" alt="" style="width:26px;height:26px;flex-shrink:0;"></div>
+    <div>
+      <h2>ปฏิทินหลักทรัพย์</h2>
+      <p>วันขึ้นเครื่องหมาย XD · XM · XR</p>
+    </div>
+  </div>
+  <div class="xd-legend" aria-label="ความหมายของเครื่องหมาย">
+    <div class="xd-legend-card"><div class="xd-legend-code">XD</div><div class="xd-legend-text">ไม่ได้รับ<br>เงินปันผล</div></div>
+    <div class="xd-legend-card"><div class="xd-legend-code">XM</div><div class="xd-legend-text">ไม่มีสิทธิ<br>เข้าประชุม</div></div>
+    <div class="xd-legend-card"><div class="xd-legend-code">XR</div><div class="xd-legend-text">ไม่ได้สิทธิ<br>จองหุ้นเพิ่มทุน</div></div>
+  </div>
+  <hr class="xd-divider">
+  <div class="xd-filter-row">
+    <div class="xd-search">
+      <img src="/img/icon-c3395797.svg" alt="" class="xd-search-icon">
+      <input type="search" id="xd-search-input" placeholder="ค้นหาชื่อหุ้น" autocomplete="off" autocapitalize="characters" enterkeyhint="search" aria-label="ค้นหาชื่อหุ้น" oninput="filterXdFull()">
+      <button type="button" class="xd-search-clear" id="xd-search-clear" aria-label="ล้างคำค้นหา" onclick="clearXdSearch()" hidden>✕</button>
+    </div>
+    <button type="button" class="xd-adv-btn" id="xd-adv-btn" onclick="openXdAdv()" aria-haspopup="dialog" aria-controls="xd-adv-sheet">
+      <img src="/img/icon-f5b602e1.svg" alt="">ตัวกรอง<span class="xd-adv-count" id="xd-adv-count" hidden></span>
+    </button>
+  </div>
+  <div class="xd-active-chips" id="xd-active-chips" hidden></div>
+  <div class="xd-full" id="xd-full-list"></div>
+  <div class="xd-empty" id="xd-full-empty">กำลังโหลดข้อมูล...</div>
+  <div class="xd-full-pager" id="xd-full-pager" hidden>
+    <div class="xd-pg-info" id="xd-full-info"></div>
+    <nav class="xd-pg-nums" id="xd-full-nums" aria-label="เลือกหน้า"></nav>
+  </div>
+  <p class="xd-note">ข้อมูลใช้ประกอบการตัดสินใจเท่านั้น ควรตรวจสอบกับประกาศของบริษัทจดทะเบียนอีกครั้ง</p>
+</div>
+
+<!-- ค้นหาขั้นสูง (ปฏิทินหลักทรัพย์) -->
+<div class="xd-adv-overlay" id="xd-adv-overlay" onclick="closeXdAdv()" hidden></div>
+<div class="xd-adv-sheet" id="xd-adv-sheet" role="dialog" aria-modal="true" aria-labelledby="xd-adv-title" hidden>
+  <div class="xd-adv-head">
+    <h3 id="xd-adv-title">ค้นหาขั้นสูง</h3>
+    <button type="button" class="modal-close" aria-label="ปิด" onclick="closeXdAdv()">✕</button>
+  </div>
+  <div class="xd-adv-body">
+    <div class="xd-adv-sec"><div class="xd-adv-label">ประเภทเครื่องหมาย</div><div class="xd-adv-chips" id="xd-adv-types"></div></div>
+    <div class="xd-adv-sec"><div class="xd-adv-label">ช่วงวันที่ขึ้นเครื่องหมาย</div>
+      <div class="xd-adv-dates">
+        <label><span>ตั้งแต่</span><input type="date" id="xd-adv-from" onchange="xdAdvDraft.from=this.value;updateXdAdvPreview()"></label>
+        <label><span>ถึง</span><input type="date" id="xd-adv-to" onchange="xdAdvDraft.to=this.value;updateXdAdvPreview()"></label>
+      </div>
+    </div>
+    <div class="xd-adv-sec"><div class="xd-adv-label">Dividend Yield ขั้นต่ำ</div><div class="xd-adv-chips" id="xd-adv-yield"></div></div>
+  </div>
+  <div class="xd-adv-foot">
+    <button type="button" class="xd-adv-reset" onclick="resetXdAdvDraft()">ล้างทั้งหมด</button>
+    <button type="button" class="xd-adv-apply" id="xd-adv-apply" onclick="applyXdAdv()">แสดงผล</button>
+  </div>
+</div>
+
+<!-- ── PACKAGE PAGE ── -->
+<div class="page" id="page-pkg">
+  <div class="page-title">
+    <div class="page-title-icon pkg-title-icon"><img src="/img/icon-bb881483.svg" alt="" style="width:26px;height:26px;"></div>
+    <div>
+      <h2>แพ็กเกจ</h2>
+      <p class="pkg-subtitle">สถานะและสิทธิ์การใช้งานของคุณ</p>
+    </div>
+  </div>
+
+  <!-- 1) สถานะของฉัน -->
+  <section class="pkg-card" aria-labelledby="pkg-status-title">
+    <div class="pkg-status-head">
+      <h3 id="pkg-status-title" class="pkg-h3">แพ็กเกจปัจจุบัน</h3>
+      <span class="pkg-tier" id="pkg-tier">FREE</span>
+    </div>
+    <div id="pkg-status-body"></div>
+    <div class="pkg-alert" id="pkg-alert" role="status" hidden></div>
+  </section>
+
+  <!-- 2) เปรียบเทียบ -->
+  <section class="pkg-card" aria-labelledby="pkg-compare-title">
+    <h3 id="pkg-compare-title" class="pkg-h3">เปรียบเทียบแพ็กเกจ</h3>
+    <div class="pkg-table-wrap">
+      <table class="pkg-table">
+        <colgroup><col class="c-label"><col><col></colgroup>
+        <thead>
+          <tr><th scope="col"><span class="sr-only">สิทธิ์</span></th><th scope="col" id="pkg-col-free">Free</th><th scope="col" id="pkg-col-pro">Pro</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">ราคา</th><td><b>ฟรี</b></td><td><b>99 บาท/ปี</b><small>≈ 8 บ./เดือน</small></td></tr>
+          <tr><th scope="row">บันทึกเข้าแชต/เดือน</th><td>30 ครั้ง</td><td><b>ไม่จำกัด</b></td></tr>
+          <tr><th scope="row">คำนวณราคาเฉลี่ย</th><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td></tr>
+          <tr><th scope="row">คำนวณปันผล</th><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td></tr>
+          <tr><th scope="row">บันทึกซื้อ-ขายหุ้น</th><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td></tr>
+          <tr><th scope="row">ปฏิทินหลักทรัพย์</th><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td><td><span class="pkg-yes">✓<span class="sr-only">ใช้ได้</span></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pkg-cta" id="pkg-cta"></div>
+  </section>
+
+  <!-- 3) วิธีสมัคร -->
+  <section class="pkg-card" aria-labelledby="pkg-steps-title">
+    <h3 id="pkg-steps-title" class="pkg-h3">สมัคร Pro ใน 3 ขั้นตอน</h3>
+    <ol class="pkg-steps">
+      <li><b>สแกน QR PromptPay</b><span>ชำระ 99 บาท ผ่านแอปธนาคาร</span></li>
+      <li><b>ส่งสลิปในแชต LINE</b><span>ส่งรูปสลิปเข้าแชตน้องถั่ว ถัวหุ้น</span></li>
+      <li><b>ระบบตรวจสลิปอัตโนมัติ</b><span>ผ่านแล้วอัปเกรดเป็น Pro ทันที และแจ้งผลในแชต</span></li>
+    </ol>
+  </section>
+
+  <!-- 4) คำถามที่พบบ่อย -->
+  <section class="pkg-card" aria-labelledby="pkg-faq-title">
+    <h3 id="pkg-faq-title" class="pkg-h3">คำถามที่พบบ่อย</h3>
+    <div class="pkg-faq">
+      <details><summary>เครดิตนับอย่างไร</summary><p>นับ 1 เครดิตทุกครั้งที่กด "บันทึกข้อมูล" เพื่อส่งผลเข้าแชต LINE ส่วนการคำนวณและดูผลบนหน้าจอไม่ใช้เครดิต</p></details>
+      <details><summary>เครดิตรีเซ็ตเมื่อไร</summary><p>รีเซ็ตเป็น 30 เครดิตทุกวันที่ 1 ของเดือน เครดิตที่เหลือไม่สะสมไปเดือนถัดไป</p></details>
+      <details><summary>Pro ต่ออายุอย่างไร</summary><p id="pkg-faq-renew">เมื่อใกล้หมดอายุ จะมีปุ่มต่ออายุในหน้านี้ ชำระ 99 บาทผ่าน PromptPay แบบเดียวกับตอนสมัคร</p></details>
+      <details><summary>โอนเงินแล้วแต่ยังไม่เป็น Pro</summary><p>ตรวจว่าส่งสลิปในแชตแล้ว หากผ่านไป 10 นาทียังไม่อัปเกรด ติดต่อเราทาง LINE หรืออีเมลในหน้าแรก พร้อมแนบสลิป</p></details>
+    </div>
+  </section>
+</div>
+
+<!-- ── TRADE PAGE ── -->
+<div class="page" id="page-trade">
+  <div class="page-title">
+    <div class="page-title-icon"><img src="/img/icon-61ecf97c.svg" style="width:28px;height:28px;flex-shrink:0;"></div>
+    <div>
+      <h2>บันทึกการซื้อ-ขายหุ้น</h2>
+      <p>จดไว้ รู้ต้นทุนจริงทุกไม้</p>
+    </div>
+  </div>
+  <div class="form-card">
+    <!-- Tab Toggle -->
+    <div class="trade-tabs">
+      <input type="radio" name="trade-tab" id="radio-buy" value="buy" checked style="display:none" onchange="switchTradeTab('buy')">
+      <input type="radio" name="trade-tab" id="radio-sell" value="sell" style="display:none" onchange="switchTradeTab('sell')">
+      <label for="radio-buy" class="trade-tab active-buy" id="tab-buy">การซื้อ</label>
+      <label for="radio-sell" class="trade-tab" id="tab-sell">การขาย</label>
+    </div>
+
+    <!-- ── BUY FORM ── -->
+    <div id="trade-buy-form">
+      <div class="field">
+        <div class="field-label">ชื่อหุ้น (Ticker) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="text" id="buy-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();calcBuy()"></div>
+        <div class="err-msg" id="err-buy-ticker">กรุณากรอกชื่อหุ้น</div>
+      </div>
+      <div class="tr-row">
+        <div class="field">
+        <div class="field-label">ราคาที่ซื้อ (บาท) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="buy-price" placeholder="0.00" min="0" step="0.01" oninput="calcBuy()"></div>
+        <div class="err-msg" id="err-buy-price">กรุณากรอกราคาหุ้น</div>
+      </div>
+        <div class="field">
+        <div class="field-label">จำนวนหุ้น <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="buy-qty" placeholder="0" min="0" oninput="calcBuy()"></div>
+        <div class="err-msg" id="err-buy-qty">กรุณากรอกจำนวนหุ้น</div>
+      </div>
+      </div>
+      <div class="tr-summary">
+        <div class="tr-summary-label">จำนวนเงินที่ใช้ซื้อ</div>
+        <div class="tr-summary-val" id="buy-total">0.00 บาท</div>
+      </div>
+      <div class="field">
+        <div class="field-label">วันที่ซื้อ</div>
+        <div class="input-wrap"><input type="date" id="buy-date"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+        <div class="input-wrap"><textarea id="buy-note" placeholder="บันทึกเพิ่มเติม"></textarea></div>
+      </div>
+    </div>
+
+    <!-- ── SELL FORM ── -->
+    <div id="trade-sell-form" style="display:none;">
+      <div class="field">
+        <div class="field-label">ชื่อหุ้น (Ticker) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="text" id="sell-ticker" placeholder="เช่น PTT" autocomplete="off" class="input-ticker" inputmode="latin" oninput="this.value=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();calcSell()"></div>
+        <div class="err-msg" id="err-sell-ticker">กรุณากรอกชื่อหุ้น</div>
+      </div>
+      <div class="tr-row">
+        <div class="field">
+        <div class="field-label">ราคาทุน/หุ้น (บาท) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="sell-old-price" placeholder="0.00" min="0" step="0.01" oninput="calcSell()"></div>
+        <div class="err-msg" id="err-sell-old-price">กรุณากรอกราคาหุ้นเดิม</div>
+      </div>
+        <div class="field">
+        <div class="field-label">ราคาที่ขาย (บาท) <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="sell-price" placeholder="0.00" min="0" step="0.01" oninput="calcSell()"></div>
+        <div class="err-msg" id="err-sell-price">กรุณากรอกราคาที่จะขาย</div>
+      </div>
+      </div>
+      <div class="field">
+        <div class="field-label">จำนวนหุ้นที่ขาย <span style="color:#e53935;">*</span></div>
+        <div class="input-wrap"><input type="number" id="sell-qty" placeholder="0" min="0" oninput="calcSell()"></div>
+        <div class="err-msg" id="err-sell-qty">กรุณากรอกจำนวนหุ้น</div>
+      </div>
+      <div class="tr-summary sell" id="sell-summary">
+        <div class="tr-summary-label" id="sell-profit-label">กำไร/ขาดทุน</div>
+        <div class="tr-summary-val" id="sell-profit">0.00 บาท</div>
+        <div class="tr-summary-pct" id="sell-profit-pct"></div>
+        <div class="tr-summary-rows">
+          <div class="trade-result-row">
+            <span class="trade-result-label">มูลค่าทุน</span>
+            <span class="trade-result-val" id="sell-cost">0.00 บาท</span>
+          </div>
+          <div class="trade-result-row">
+            <span class="trade-result-label">มูลค่าขาย</span>
+            <span class="trade-result-val" id="sell-total">0.00 บาท</span>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">วันที่ขาย</div>
+        <div class="input-wrap"><input type="date" id="sell-date"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">หมายเหตุ <span style="color:#aaa;font-weight:400;">(ไม่บังคับ)</span></div>
+        <div class="input-wrap"><textarea id="sell-note" placeholder="บันทึกเพิ่มเติม"></textarea></div>
+      </div>
+    </div>
+
+    <button class="tr-submit" id="trade-submit-btn" onclick="submitTrade()">บันทึกการซื้อ</button>
+  </div>
+</div>
+
+<script src="/js/app.js?v=20261030"></script>
+<script src="/js/package.js?v=20261030"></script>
+<script src="/js/calendar.js?v=20261030"></script>
+<script src="/js/trade.js?v=20261030"></script>
+
+<!-- Image Preview Overlay -->
+<div id="img-preview-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.classList.remove('show')">
+  <div style="background:#fff;border-radius:16px;overflow:hidden;max-width:360px;width:100%;">
+    <div style="background:#2d7a3a;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="color:#fff;font-size:14px;font-weight:600;">กด ค้างที่รูป เพื่อบันทึก</span>
+      <button onclick="document.getElementById('img-preview-overlay').style.display = 'none'" style="background:rgba(255,255,255,0.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;">✕</button>
+    </div>
+    <img id="img-preview-src" src="" style="width:100%;display:block;">
+    <div style="padding:10px 16px;background:#f0f7e6;text-align:center;font-size:12px;color:#5a7a40;">
+      กดค้างที่รูปแล้วเลือก "บันทึกรูปภาพ"
+    </div>
+  </div>
+</div>
+
+</div><!-- end app-wrap -->
+</body>
+</html>
