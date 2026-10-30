@@ -34,9 +34,12 @@ function initPage() {
       page = stateParams.get('page')
     }
   }
-  if (page === 'avg') goPage('avg')
-  else if (page === 'div') goPage('div')
-  else goPage('home')
+  // รองรับลิงก์จาก Rich Menu: ?page=avg | div (หรือ dividend) | divstock | trade | xd | pkg
+  const PAGE_ALIASES = { dividend: 'div', calendar: 'xd', package: 'pkg', pro: 'pkg' }
+  const VALID_PAGES = ['home', 'avg', 'div', 'divstock', 'trade', 'xd', 'pkg']
+  page = PAGE_ALIASES[page] || page
+  goPage(VALID_PAGES.includes(page) ? page : 'home')
+  window.scrollTo(0, 0)
 }
 
 // Navigation
