@@ -139,15 +139,8 @@ async function submitTrade() {
 ─────────────────
 คำนวณด้วย น้องถั่ว ถัวหุ้น @nongthuastockbean`
   }
-  try {
-    await liffInitPromise
-    if (!liffReady) { alert('เชื่อมต่อ LINE ไม่สำเร็จ กรุณาปิดหน้านี้แล้วเปิดใหม่'); return }
-    if (!liff.isInClient()) { alert('ฟีเจอร์นี้ใช้ได้เฉพาะเมื่อเปิดผ่านแอป LINE เท่านั้น'); return }
-    await liff.sendMessages([{ type: 'text', text: msg }])
-    liff.closeWindow()
-  } catch(e) {
-    alert('ส่งข้อความไม่สำเร็จ: ' + (e.message || 'กรุณาลองใหม่'))
-  }
+  // หัก 1 เครดิตแล้วส่งเข้าแชต (sendToChat อยู่ใน app.js)
+  await sendToChat(msg)
 }
 
 // Clear errors on input

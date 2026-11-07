@@ -298,6 +298,119 @@ Dividend Yield: ${d.divYield.toFixed(2)}%
 ─────────────────
 คำนวณด้วย น้องถั่ว ถัวหุ้น @nongthuastockbean`
   }
+  if (!msg) return
+  await sendToChat(msg)
+}
+
+// ============================================================
+// ระบบ user + เครดิต (ต่อกับ backend: /api/me, /api/credits/consume, /api/credits/refund)
+// - ยืนยันตัวตนด้วย LIFF access token (server ตรวจกับ LINE เอง ไม่เชื่อ userId จากหน้าเว็บ)
+// - หัก 1 เครดิตตอนกด "บันทึกข้อมูล" ก่อนส่งเข้าแชต ถ้าส่งไม่สำเร็จจะคืนเครดิตให้
+// - ถ้า server มีปัญหา (ไม่ใช่เครดิตหมด) ยังให้ส่งเข้าแชตได้ — ไม่ให้ระบบเครดิตทำฟีเจอร์หลักพัง
+// ============================================================
+let meState = null
+let sendingToChat = false
+
+async function apiFetch(path, method = 'GET') {
+  await liffInitPromise
+  if (!liffReady || !liff.isLoggedIn()) throw new Error('not-logged-in')
+  const token = liff.getAccessToken()
+  if (!token) throw new Error('not-logged-in')
+  const res = await fetch(path, { method, headers: { Authorization: 'Bearer ' + token } })
+  const data = await res.json().catch(() => ({}))
+  return { status: res.status, data }
+}
+
+function thaiDateFromIso(iso) {
+  const [y, m, d] = String(iso).slice(0, 10).split('-')
+  return `${+d} ${THAI_MONTHS_SHORT[+m - 1]} ${+y + 543}`
+}
+
+// อัปเดตทุกจุดที่แสดงสถานะผู้ใช้: การ์ดเครดิตหน้า Home, ป้าย FREE/PRO, การ์ดแพ็กเกจ, หน้าแพ็กเกจ
+function applyMe(me) {
+  meState = me
+  const isPro = me.tier === 'pro'
+  updateCreditDisplay(me.used, isPro ? null : me.limit, me.resetAt)
+  const badge = document.getElementById('profile-tier-badge')
+  if (badge) badge.textContent = isPro ? 'PRO' : 'FREE'
+  const freeCard = document.getElementById('plan-free-card')
+  const proCard = document.getElementById('plan-pro-card')
+  if (freeCard) freeCard.classList.toggle('current', !isPro)
+  if (proCard) proCard.classList.toggle('current', isPro)
+  // ใช้ style.display แทน hidden เพราะ CSS ของการ์ดกำหนด display ไว้ (hidden จะไม่มีผล)
+  const show = (el, on) => { if (el) el.style.display = on ? '' : 'none' }
+  ;['plan-free-badge', 'plan-free-status'].forEach(id => show(document.getElementById(id), !isPro))
+  const proBtn = document.getElementById('plan-pro-btn')
+  const proStatus = document.getElementById('plan-pro-status')
+  if (proBtn) {
+    show(proBtn, !isPro)
+    if (!isPro && me.proOpen) {
+      proBtn.disabled = false
+      proBtn.textContent = 'สมัคร Pro'
+      proBtn.onclick = () => { goPage('pkg'); window.scrollTo(0, 0) }
+    }
+  }
+  show(proStatus, isPro)
+  if (typeof setPkgUser === 'function') {
+    setPkgUser({ loading: false, error: null, tier: me.tier, used: me.used, limit: me.limit, resetAt: me.resetAt, expiresAt: me.expiresAt, proOpen: !!me.proOpen })
+  }
+}
+
+function showMeError(text) {
+  const usedEl = document.getElementById('credit-used-text')
+  if (usedEl) usedEl.textContent = text
+  if (typeof setPkgUser === 'function') setPkgUser({ loading: false, error: text })
+}
+
+async function loadMe() {
+  try {
+    const { status, data } = await apiFetch('/api/me')
+    if (status === 200 && data.ok) applyMe(data)
+    else showMeError(data.error || 'โหลดข้อมูลเครดิตไม่สำเร็จ')
+  } catch (err) {
+    showMeError(err.message === 'not-logged-in' ? 'เปิดผ่านแอป LINE เพื่อดูเครดิตของคุณ' : 'โหลดข้อมูลเครดิตไม่สำเร็จ')
+  }
+}
+
+// หัก 1 เครดิต → 'used' หักแล้ว | 'empty' เครดิตหมด | 'skipped' server มีปัญหา (ปล่อยให้ส่งได้)
+async function consumeCredit() {
+  try {
+    const { status, data } = await apiFetch('/api/credits/consume', 'POST')
+    if (data && data.tier) applyMe(data)
+    if (status === 200 && data.ok) return 'used'
+    if (status === 402) return 'empty'
+  } catch (err) {
+    console.error('consumeCredit error:', err)
+  }
+  return 'skipped'
+}
+
+async function refundCredit() {
+  try {
+    const { data } = await apiFetch('/api/credits/refund', 'POST')
+    if (data && data.tier) applyMe(data)
+  } catch (err) {
+    console.error('refundCredit error:', err)
+  }
+}
+
+function showNoCredit() {
+  const reset = meState && meState.resetAt ? thaiDateFromIso(meState.resetAt) : 'วันที่ 1 เดือนหน้า'
+  const text = `เครดิตเดือนนี้หมดแล้ว\nคำนวณและดูผลบนหน้าจอได้ตามปกติ แต่จะบันทึกเข้าแชตได้อีกครั้ง ${reset}`
+  if (meState && meState.proOpen) {
+    if (confirm(text + '\n\nสมัคร Pro 99 บาท/ปี เพื่อบันทึกได้ไม่จำกัดไหม?')) {
+      document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'))
+      goPage('pkg'); window.scrollTo(0, 0)
+    }
+  } else {
+    alert(text)
+  }
+}
+
+// ส่งข้อความเข้าแชต LINE (ใช้ร่วมกันทุกปุ่ม "บันทึกข้อมูล" รวมถึงหน้าบันทึกซื้อ-ขาย)
+async function sendToChat(msg) {
+  if (sendingToChat) return
+  sendingToChat = true
   try {
     await liffInitPromise
     if (!liffReady) {
@@ -308,10 +421,19 @@ Dividend Yield: ${d.divYield.toFixed(2)}%
       alert('ฟีเจอร์ส่งผลเข้าแชทใช้ได้เฉพาะเมื่อเปิดผ่านแอป LINE เท่านั้น')
       return
     }
-    await liff.sendMessages([{ type: 'text', text: msg }])
+    const credit = await consumeCredit()
+    if (credit === 'empty') { showNoCredit(); return }
+    try {
+      await liff.sendMessages([{ type: 'text', text: msg }])
+    } catch (e) {
+      if (credit === 'used') await refundCredit()
+      throw e
+    }
     liff.closeWindow()
-  } catch(e) {
+  } catch (e) {
     alert('ส่งข้อความไม่สำเร็จ: ' + (e.message || 'กรุณาลองใหม่อีกครั้ง'))
+  } finally {
+    sendingToChat = false
   }
 }
 
@@ -322,34 +444,39 @@ initPage()
 const THAI_MONTHS_SHORT = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
 const THAI_MONTHS_FULL = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']
 
-// Credit status display (หน้าแรก) — placeholder UI รอเชื่อม Supabase users.usage_count จริงผ่าน backend API
-function updateCreditDisplay(used, total) {
+// Credit status display (หน้าแรก) — ค่าจริงมาจาก GET /api/me (ดู applyMe)
+function updateCreditDisplay(used, total, resetAt) {
   const remainEl = document.getElementById('credit-remaining-text')
+  const totalEl = document.getElementById('credit-total-text')
   const usedEl = document.getElementById('credit-used-text')
   const fillEl = document.getElementById('credit-progress-fill')
   const resetEl = document.getElementById('credit-reset-text')
   if (total == null) {
     // Pro / เครดิตไม่จำกัด
     if (remainEl) remainEl.textContent = '∞'
-    if (usedEl) usedEl.textContent = 'ใช้งานได้ไม่จำกัด'
+    if (totalEl) totalEl.textContent = ' ไม่จำกัด'
+    if (usedEl) usedEl.textContent = `Pro · บันทึกเข้าแชตได้ไม่จำกัด (เดือนนี้ใช้ไป ${used} ครั้ง)`
     if (fillEl) fillEl.style.width = '100%'
   } else {
     const remaining = Math.max(total - used, 0)
     const pct = total > 0 ? Math.min((used / total) * 100, 100) : 0
     if (remainEl) remainEl.textContent = remaining
+    if (totalEl) totalEl.textContent = ` / ${total} เครดิต`
     if (usedEl) usedEl.textContent = `ใช้ไป ${used} จาก ${total} เครดิต`
     if (fillEl) fillEl.style.width = pct + '%'
   }
   if (resetEl) {
-    const now = new Date()
-    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
-    resetEl.textContent = `รีเซ็ต ${nextMonth.getDate()} ${THAI_MONTHS_SHORT[nextMonth.getMonth()]} ${nextMonth.getFullYear() + 543}`
+    if (total == null) {
+      resetEl.textContent = ''
+    } else if (resetAt) {
+      resetEl.textContent = 'รีเซ็ต ' + thaiDateFromIso(resetAt)
+    } else {
+      const now = new Date()
+      const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+      resetEl.textContent = `รีเซ็ต ${nextMonth.getDate()} ${THAI_MONTHS_SHORT[nextMonth.getMonth()]} ${nextMonth.getFullYear() + 543}`
+    }
   }
 }
-// TODO: แทนที่บรรทัดนี้ด้วยการดึงค่าจริงจาก Supabase (users.usage_count) ผ่าน backend API
-// เมื่อระบบ access control + usage count เขียนเสร็จ เช่น:
-// fetch('/api/user-status?userId=' + lineUserId).then(r => r.json()).then(d => updateCreditDisplay(d.usageCount, d.tier === 'pro' ? null : d.creditLimit))
-updateCreditDisplay(20, 30)
 
 
 // โปรไฟล์จาก LIFF — ใช้ชื่อจริงของผู้ใช้เมื่อเปิดผ่าน LINE ("สมาชิกตั้งแต่" ต้องรอข้อมูล created_at จาก Supabase จึงยังไม่แสดง)
@@ -368,4 +495,7 @@ async function loadProfileInfo() {
   }
 }
 loadProfileInfo()
+// รอให้สคริปต์ทุกไฟล์โหลดครบ (package.js มี setPkgUser) แล้วค่อยดึงสถานะผู้ใช้
+if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', loadMe)
+else window.addEventListener('load', loadMe)
 

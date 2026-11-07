@@ -46,7 +46,7 @@
       <div class="profile-info">
         <div class="profile-name-row">
           <span id="profile-name" class="profile-name">นักลงทุน</span>
-          <span class="profile-tier-badge">FREE</span>
+          <span class="profile-tier-badge" id="profile-tier-badge">FREE</span>
         </div>
         <div class="profile-sub" id="profile-sub">เข้าสู่ระบบผ่าน LINE</div>
       </div>
@@ -57,9 +57,9 @@
         <span class="credit-label">เครดิตคงเหลือเดือนนี้</span>
         <span class="credit-reset" id="credit-reset-text">รีเซ็ต —</span>
       </div>
-      <div class="credit-number"><span id="credit-remaining-text">10</span><span class="credit-number-total"> / 30 เครดิต</span></div>
-      <div class="credit-track"><div id="credit-progress-fill" class="credit-fill" style="width:66.67%"></div></div>
-      <div class="credit-used-text" id="credit-used-text">ใช้ไป 20 จาก 30 เครดิต</div>
+      <div class="credit-number"><span id="credit-remaining-text">–</span><span class="credit-number-total" id="credit-total-text"> / 30 เครดิต</span></div>
+      <div class="credit-track"><div id="credit-progress-fill" class="credit-fill" style="width:0%"></div></div>
+      <div class="credit-used-text" id="credit-used-text" aria-live="polite">กำลังโหลดเครดิต…</div>
     </div>
   </div>
 
@@ -93,10 +93,10 @@
     </div>
   </div>
   <div class="plans-stack">
-    <div class="plan-card-v2 current">
+    <div class="plan-card-v2 current" id="plan-free-card">
       <div class="plan-card-v2-head">
         <span class="plan-card-v2-name">Free</span>
-        <span class="plan-card-v2-badge current-badge">ใช้งานอยู่</span>
+        <span class="plan-card-v2-badge current-badge" id="plan-free-badge">ใช้งานอยู่</span>
       </div>
       <div class="plan-card-v2-price">0 บาท<span>ตลอดชีพ</span></div>
       <div class="plan-card-v2-sub">30 เครดิต/เดือน</div>
@@ -105,9 +105,9 @@
         <li>คำนวณปันผล</li>
         <li>บันทึกซื้อ-ขายหุ้น</li>
       </ul>
-      <div class="plan-card-v2-status">แพ็กเกจของคุณ</div>
+      <div class="plan-card-v2-status" id="plan-free-status">แพ็กเกจของคุณ</div>
     </div>
-    <div class="plan-card-v2 pro">
+    <div class="plan-card-v2 pro" id="plan-pro-card">
       <div class="plan-card-v2-head">
         <span class="plan-card-v2-name">Pro</span>
       </div>
@@ -117,7 +117,8 @@
         <li>ใช้ได้ทุกเมนู</li>
         <li>ใช้ได้ไม่จำกัดครั้ง</li>
       </ul>
-      <button class="plan-card-v2-btn" type="button" disabled>เร็วๆ นี้</button>
+      <button class="plan-card-v2-btn" id="plan-pro-btn" type="button" disabled>เร็วๆ นี้</button>
+      <div class="plan-card-v2-status" id="plan-pro-status" style="display:none">แพ็กเกจของคุณ</div>
     </div>
   </div>
   <button type="button" class="plans-more" onclick="goPage('pkg');window.scrollTo(0,0)">ดูรายละเอียดแพ็กเกจ<span aria-hidden="true">›</span></button>
@@ -665,10 +666,10 @@
   </div>
 </div>
 
-<script src="/js/app.js?v=20261030"></script>
-<script src="/js/package.js?v=20261030"></script>
+<script src="/js/app.js?v=20261107"></script>
+<script src="/js/package.js?v=20261107"></script>
 <script src="/js/calendar.js?v=20261030c"></script>
-<script src="/js/trade.js?v=20261030"></script>
+<script src="/js/trade.js?v=20261107"></script>
 
 <!-- Image Preview Overlay -->
 <div id="img-preview-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;" onclick="if(event.target===this)this.classList.remove('show')">

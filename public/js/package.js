@@ -1,9 +1,9 @@
 // package.js — หน้าแพ็กเกจ (ต้องโหลดหลัง app.js)
 // ============================================================
 // หน้าแพ็กเกจ — แสดงตามสถานะผู้ใช้ (pkgUser)
-// TODO: ดึงค่าจริงจาก backend เช่น GET /api/me → { tier, used, limit, expiresAt, proOpen }
+// ค่าจริงมาจาก GET /api/me ผ่าน applyMe() ใน app.js → { tier, used, limit, resetAt, expiresAt, proOpen }
 // ============================================================
-let pkgUser = { tier: 'free', used: 20, limit: 30, expiresAt: null, proOpen: false }
+let pkgUser = { loading: true, error: null, tier: 'free', used: 0, limit: 30, resetAt: null, expiresAt: null, proOpen: false }
 
 function pkgThaiDate(d) {
   return `${d.getDate()} ${THAI_MONTHS_SHORT[d.getMonth()]} ${d.getFullYear() + 543}`
@@ -16,11 +16,19 @@ function renderPkgPage() {
   const alertEl = document.getElementById('pkg-alert')
   const cta = document.getElementById('pkg-cta')
   if (!body) return
+  if (u.loading || u.error) {
+    tierEl.textContent = '–'
+    tierEl.classList.remove('pro')
+    body.innerHTML = `<p class="pkg-note" role="status">${u.error || 'กำลังโหลดสถานะแพ็กเกจ…'}</p>`
+    alertEl.hidden = true
+    cta.innerHTML = ''
+    return
+  }
   const isPro = u.tier === 'pro'
   tierEl.textContent = isPro ? 'PRO' : 'FREE'
   tierEl.classList.toggle('pro', isPro)
   const now = new Date()
-  const reset = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+  const reset = u.resetAt ? new Date(u.resetAt + 'T00:00:00+07:00') : new Date(now.getFullYear(), now.getMonth() + 1, 1)
   let alert = null
   if (isPro) {
     const exp = u.expiresAt ? new Date(u.expiresAt) : null
