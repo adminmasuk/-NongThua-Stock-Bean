@@ -18,11 +18,23 @@ const app = express()
 const PRO_OPEN = process.env.PRO_OPEN === 'true'
 const ADMIN_LINE_USER_ID = process.env.ADMIN_LINE_USER_ID
 
+// กันไว้อีกชั้น: error ที่หลุดจาก async ไหนก็ตามต้องไม่ทำให้ server ล่ม (Node ≥15 ปิด process ถ้าไม่มีตัวจับ)
+process.on('unhandledRejection', err => console.error('unhandledRejection:', err))
+
 app.post('/webhook', line.middleware(config), async (req, res) => {
-  const events = req.body.events
-  await Promise.all(events.map(handleEvent))
+  const events = Array.isArray(req.body && req.body.events) ? req.body.events : []
+  // allSettled: event ไหนพัง (ข้อมูลผิดรูปแบบ / LINE reply ไม่สำเร็จ) ก็แค่ log ไว้ ไม่ลาม event อื่นหรือทั้ง server
+  const results = await Promise.allSettled(events.map(handleEvent))
+  results.forEach(r => { if (r.status === 'rejected') console.error('webhook event error:', r.reason) })
   res.json({ status: 'ok' })
 })
+
+// ตัวเลขจากข้อความ JSON ที่ผู้ใช้พิมพ์มา — ต้องเป็นตัวเลขจริงและไม่ติดลบ ไม่งั้นถือว่าไม่ถูกต้อง
+function toNum(v) {
+  const n = typeof v === 'number' ? v : (typeof v === 'string' && v.trim() !== '' ? Number(v) : NaN)
+  return Number.isFinite(n) && n >= 0 ? n : null
+}
+const MAX_TICKER_LEN = 20
 
 async function handleEvent(event) {
   // เพิ่มเพื่อน OA → สร้าง user ไว้เลย (ได้ Free 30 เครดิต/เดือน)
@@ -53,28 +65,39 @@ async function handleEvent(event) {
     return
   }
 
+  // JSON.parse ให้ null / ตัวเลข / array ได้ด้วย → รับเฉพาะ object
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return
+
+  const ticker = String(data.ticker == null ? '' : data.ticker).trim().slice(0, MAX_TICKER_LEN) || '-'
+  const qty = toNum(data.qty)
+  const cost = toNum(data.cost)
+
   let resultText = ''
 
   if (data.action === 'avgcost') {
-    const total = data.qty * data.cost
-    const current = data.qty * data.price
+    const price = toNum(data.price)
+    if (qty == null || cost == null || price == null || qty === 0 || cost === 0) return
+    const total = qty * cost
+    const current = qty * price
     const profit = current - total
     const profitPct = ((profit / total) * 100).toFixed(2)
-    resultText = 
-`📊 ${data.ticker} — ราคาเฉลี่ย
-ราคาเฉลี่ย: ${data.cost} บาท
-จำนวน: ${data.qty.toLocaleString()} หุ้น
+    resultText =
+`📊 ${ticker} — ราคาเฉลี่ย
+ราคาเฉลี่ย: ${cost} บาท
+จำนวน: ${qty.toLocaleString()} หุ้น
 ทุนรวม: ${total.toLocaleString()} บาท
 มูลค่าปัจจุบัน: ${current.toLocaleString()} บาท
 กำไร/ขาดทุน: ${profit >= 0 ? '+' : ''}${profit.toLocaleString()} บาท (${profitPct}%)`
 
   } else if (data.action === 'dividend') {
-    const divYield = ((data.dps / data.cost) * 100).toFixed(2)
-    const totalDiv = data.qty * data.dps
+    const dps = toNum(data.dps)
+    if (qty == null || cost == null || dps == null || cost === 0) return
+    const divYield = ((dps / cost) * 100).toFixed(2)
+    const totalDiv = qty * dps
     resultText =
-`💰 ${data.ticker} — ปันผล
-ราคาทุน: ${data.cost} บาท
-เงินปันผลต่อหุ้น: ${data.dps} บาท
+`💰 ${ticker} — ปันผล
+ราคาทุน: ${cost} บาท
+เงินปันผลต่อหุ้น: ${dps} บาท
 Dividend Yield: ${divYield}%
 ปันผลที่จะได้รับ: ${totalDiv.toLocaleString()} บาท`
   }
