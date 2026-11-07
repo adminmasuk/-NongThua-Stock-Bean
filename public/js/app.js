@@ -316,7 +316,10 @@ async function apiFetch(path, method = 'GET') {
   if (!liffReady || !liff.isLoggedIn()) throw new Error('not-logged-in')
   const token = liff.getAccessToken()
   if (!token) throw new Error('not-logged-in')
-  const res = await fetch(path, { method, headers: { Authorization: 'Bearer ' + token } })
+  const headers = { Authorization: 'Bearer ' + token }
+  // ID token ใช้สำรองฝั่ง server เมื่อ LIFF app ไม่มี scope profile (ต้องเปิด scope openid)
+  try { const idToken = liff.getIDToken && liff.getIDToken(); if (idToken) headers['X-Line-Id-Token'] = idToken } catch {}
+  const res = await fetch(path, { method, headers })
   const data = await res.json().catch(() => ({}))
   return { status: res.status, data }
 }
