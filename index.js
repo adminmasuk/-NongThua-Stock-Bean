@@ -205,10 +205,15 @@ app.get('/api/xd-calendar', async (req, res) => {
 app.get('/healthz', async (req, res) => {
   const m = migrationState()
   let db = false
-  try { await pool.query('select 1'); db = true } catch {}
+  let dbError = null
+  try { await pool.query('select 1'); db = true } catch (err) {
+    // แสดงเฉพาะรหัส error + ข้อความสั้น ๆ ไว้ช่วยหาสาเหตุ (ไม่มีรหัสผ่านอยู่ในข้อความ)
+    dbError = [err.code, String(err.message || '')].filter(Boolean).join(' ').replace(/:\/\/[^@\s]*@/g, '://***@').slice(0, 160)
+  }
   res.status(db && m.done ? 200 : 503).json({
     ok: db && m.done,
     db,
+    ...(dbError ? { dbError } : {}),
     migration: m.done ? 'ok' : (m.error ? 'failed' : 'pending'),
     adminConfigured: !!ADMIN_LINE_USER_ID,
     proOpen: PRO_OPEN
