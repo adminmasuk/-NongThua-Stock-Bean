@@ -4,6 +4,7 @@ const path = require('path')
 const pool = require('./lib/db')
 const users = require('./lib/userService')
 const { requireLiffUser } = require('./lib/liffAuth')
+const { runMigrations, migrationState } = require('./lib/migrate')
 
 const config = {
   channelAccessToken: process.env.LINE_TOKEN,
@@ -200,6 +201,20 @@ app.get('/api/xd-calendar', async (req, res) => {
   }
 })
 
+// GET /healthz — เช็คว่า server + ฐานข้อมูลพร้อม (ใช้กับ UptimeRobot ได้) ไม่เปิดเผยข้อมูลผู้ใช้
+app.get('/healthz', async (req, res) => {
+  const m = migrationState()
+  let db = false
+  try { await pool.query('select 1'); db = true } catch {}
+  res.status(db && m.done ? 200 : 503).json({
+    ok: db && m.done,
+    db,
+    migration: m.done ? 'ok' : (m.error ? 'failed' : 'pending'),
+    adminConfigured: !!ADMIN_LINE_USER_ID,
+    proOpen: PRO_OPEN
+  })
+})
+
 // API ที่ต้องยืนยันตัวตน (วางหลัง /api/xd-calendar ซึ่งเป็นข้อมูลสาธารณะ)
 app.use('/api', api)
 
@@ -211,4 +226,7 @@ app.get('/liff', (req, res) => {
 })
 
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Bot running on port ${PORT}`))
+app.listen(PORT, () => {
+  console.log(`Bot running on port ${PORT}`)
+  runMigrations()
+})
